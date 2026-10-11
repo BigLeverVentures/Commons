@@ -13,6 +13,7 @@ import { Happening } from './Happening'
 import type { Invitation } from '@/lib/invitations'
 import { TOPICS, topicFor, freshness } from '@/lib/topics'
 import type { PostWithFellow } from '@/types'
+import { postActivity } from '@/lib/post-activity'
 import { createBoardSearch } from '@/lib/board-search'
 
 export function TopicBoard({ posts, publicOnly = false, builtOnly = false, interests = [], now = 0, invitations = [] }: { posts: PostWithFellow[]; publicOnly?: boolean; builtOnly?: boolean; interests?: string[]; now?: number; invitations?: Invitation[] }) {
@@ -32,8 +33,10 @@ export function TopicBoard({ posts, publicOnly = false, builtOnly = false, inter
   const emptyTitle = hasFilters ? 'No posts match these filters.' : builtOnly ? 'Nothing shared in Built here yet.' : posts.length ? 'No open posts right now.' : 'No posts yet.'
   const emptyDescription = personal && !interests.length ? `Choose your interests in Profile, or select All topics to explore ${COMMUNITY.name}.` : hasFilters ? 'Try another topic, choose a different post type, or clear your search.' : builtOnly ? `Share something ${COMMUNITY.memberPlural} made happen together, or add an outcome to an existing post.` : posts.length ? 'Include other states to explore earlier posts, or share a new ask, offer, or project.' : 'Share an ask, an offer, or a project to get things started.'
 
+  const Heading = publicOnly ? 'h2' : 'h1'
+
   return <div className="commons">
-    <header className="commons-hero">
+    {publicOnly && <header className="commons-hero">
       <div className="commons-hero-inner page-inset">
         <div className="hero-text">
           {builtOnly && <p className="eyebrow">{COMMUNITY.heroHeadline}</p>}
@@ -44,10 +47,15 @@ export function TopicBoard({ posts, publicOnly = false, builtOnly = false, inter
         </div>
         <ConnectionIllustration />
       </div>
-    </header>
+    </header>}
     <section className="commons-content page-inset" aria-labelledby="commons-heading">
-      <div className="explore-heading"><div><h2 id="commons-heading" className="type-section">{builtOnly ? "Look what we made together" : "Explore the commons"}</h2></div><p>{filtered.length} {filtered.length === 1 ? 'connection' : 'connections'} to explore</p></div>
-      {!builtOnly && <Happening invitations={invitations} now={now} />}
+      {!publicOnly && !builtOnly && <Happening invitations={invitations} />}
+      <div className="explore-heading">
+        <Heading id="commons-heading" className={`type-section${!publicOnly && !builtOnly ? ' sr-only md:not-sr-only' : ''}`}>{builtOnly ? "Look what we made together" : "Explore the commons"}</Heading>
+        {!publicOnly && <Link href={builtOnly ? "/posts/new?built=1" : "/posts/new"} className="primary-button">{builtOnly ? "Share something built" : "Start something"} <LinkIcon /></Link>}
+      </div>
+      {publicOnly && !builtOnly && <Happening invitations={invitations} />}
+      <p className="board-results" aria-live="polite">{filtered.length} {filtered.length === 1 ? 'connection' : 'connections'} to explore</p>
       <div className="board-controls">
         <label className="search-field"><span className="sr-only">Search the board</span><span aria-hidden="true">⌕</span><input type="search" placeholder={`An idea, a topic, a ${COMMUNITY.memberSingular}…`} value={search} onChange={e => setSearch(e.target.value)} /></label>
         <label><span className="sr-only">Topic</span><select value={topic} onChange={e => setTopic(e.target.value)}><option value="all">All topics</option>{!publicOnly && <option value="interests">My interests</option>}{TOPICS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label>
@@ -58,10 +66,11 @@ export function TopicBoard({ posts, publicOnly = false, builtOnly = false, inter
         const group = filtered.filter(p => topicFor(p.tags, p.topic).id === t.id)
         if (!group.length) return null
         return <section className={`topic-island island-${t.color}`} key={t.id} aria-labelledby={`topic-${t.id}`}>
-          <div className="island-heading"><span className="island-mark" aria-hidden="true">✳</span><div><h3 id={`topic-${t.id}`}>{t.name}</h3><p>{t.description}</p></div></div>
+          <div className="island-heading"><svg className="island-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" focusable="false"><path d="M16 2v28M2 16h28M6 6l20 20M6 26L26 6" /></svg><div><h3 id={`topic-${t.id}`}>{t.name}</h3><p>{t.description}</p></div></div>
           <div className="island-projects">{group.map(p => <Link className={`idea-card ${p.built_at ? 'built-project-card' : ''}`} href={`/posts/${p.id}`} key={p.id}>
             {p.built_at && readWebsitePreview(p.link_preview, p.outcome_url) && <WebsitePreviewImage image={readWebsitePreview(p.link_preview, p.outcome_url)!.image} title={p.title} />}
-            <div className="idea-meta"><span className={`kind-${p.type}`}>{p.type}</span><span className={p.built_at ? 'kind-project' : undefined}>{p.built_at ? 'Built here ✨' : p.status !== 'open' ? postStatusLabel(p.status, p.type) : freshness(p.created_at)}</span></div>
+            <div className="idea-meta"><span className={`kind-${p.type}`}>{p.type}</span><span className={p.built_at ? 'kind-project' : undefined}>{p.built_at ? 'Built here ✨' : p.status !== 'open' ? postStatusLabel(p.status, p.type) : null}</span></div>
+            <p className="idea-activity"><time dateTime={postActivity(p).date}>{postActivity(p).label} {freshness(postActivity(p).date, now || Date.now())}</time></p>
             <h4>{p.title}</h4>{p.built_at && <p className="text-xs text-[var(--obsidian-muted)]">{postStatusLabel(p.status, p.type)}</p>}<p className="idea-summary">{p.description}</p>
             {!!p.collaborators?.length && <p className="text-xs text-[var(--obsidian-muted)]">In collaboration with {p.collaborators.join(', ')}</p>}
             {builtOnly && p.outcome_url && <p className="built-website-label">Explore the project <LinkIcon /></p>}

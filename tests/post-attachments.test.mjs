@@ -53,7 +53,7 @@ function harness({uploadFails=false,saveFails=false,owner=true,saveCommits=false
     '@/lib/supabase/server':{getSupabaseServerClient:async()=>client},'@/lib/mentions':load('src/lib/mentions.ts',{}),'@/lib/validate-mentions':{validateMentions:async()=>null},'@/lib/auth':{requireAuth:async()=>({id:alice})},
     '@/lib/runtime':{isPreviewMode:()=>false},'@/lib/preview':{changePreview(){throw new Error('Unexpected preview')}},
     '@/lib/website-preview':{retainedWebsitePreview:()=>null,submittedWebsitePreview:()=>null,fetchWebsitePreview:async()=>null},
-    '@/lib/collaborator-credits':load('src/lib/collaborator-credits.ts',{'./post-fields':load('src/lib/post-fields.ts')}),'@/lib/validate-credits':{validateCredits:async()=>null},'@/lib/post-fields':load('src/lib/post-fields.ts'),'@/lib/post-status':load('src/lib/post-status.ts'),'@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {})}),
+    '@/lib/collaborator-credits':load('src/lib/collaborator-credits.ts',{'./post-fields':load('src/lib/post-fields.ts')}),'@/lib/validate-credits':{validateCredits:async()=>null},'@/lib/post-fields':load('src/lib/post-fields.ts'),'@/lib/post-status':load('src/lib/post-status.ts'),'@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {}),'./post-activity':load('src/lib/post-activity.ts', {})}),
     '@/lib/topics':load('src/lib/topics.ts'),
     'next/cache':{revalidatePath(){}},'next/navigation':{redirect(url){throw new Error('redirect:'+url)}},
   })

@@ -20,7 +20,7 @@ function loadProxy(configured = true, user = null, cookies = []) {
 test('public browsing is available to guests while write and account routes require sign-in', async () => {
   for (const configured of [true, false]) {
     const proxy = loadProxy(configured)
-    for (const path of ['/', '/board','/invitations','/api/share-image/20000000-0000-4000-8000-000000000001', '/fellows/0123456789abcdef0123456789abcdef', '/built', '/posts/example-id', '/projects', '/projects/example-id']) {
+    for (const path of ['/faq', '/privacy', '/terms', '/', '/board','/invitations','/api/share-image/20000000-0000-4000-8000-000000000001', '/fellows/0123456789abcdef0123456789abcdef', '/built', '/posts/example-id', '/projects', '/projects/example-id']) {
       const response = await proxy(new NextRequest('http://localhost' + path))
       assert.equal(response.headers.get('location'), null, path)
     }

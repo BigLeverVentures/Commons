@@ -1,3 +1,4 @@
+import { comparePostActivity } from './post-activity'
 import { withPostStory } from '@/lib/post-story'
 import 'server-only'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
@@ -9,7 +10,7 @@ export async function loadPosts(): Promise<PostWithFellow[]> {
   if (isPreviewMode()) {
     const state = readPreview()
     return state.posts.map(raw => { const post = withPostStory(raw); return ({ ...post, fellow: state.fellows.find(f => f.id === post.user_id) ?? null }) })
-      .sort((a, b) => b.created_at.localeCompare(a.created_at))
+      .sort(comparePostActivity)
   }
   const db = await getSupabaseServerClient()
   const posts: PostWithFellow[] = []
@@ -18,7 +19,7 @@ export async function loadPosts(): Promise<PostWithFellow[]> {
       .order('created_at', { ascending: false }).order('id').range(offset, offset + 499)
     if (error) throw new Error('Unable to load the board. Please try again.')
     posts.push(...(data ?? []))
-    if (!data || data.length < 500) return posts.map(withPostStory)
+    if (!data || data.length < 500) return posts.map(withPostStory).sort(comparePostActivity)
   }
 }
 
@@ -56,7 +57,7 @@ export async function loadPublicPosts(): Promise<PostWithFellow[]> {
     const { data, error } = await db.from('public_posts').select('*').order('created_at', { ascending: false }).order('id').range(offset, offset + 499)
     if (error) throw new Error('Unable to load the board.')
     posts.push(...(data ?? []).map(p => ({ ...p, is_public: true, user_id: p.author_key, fellow: { name: p.author_name, cohort: null, avatar_path: p.author_avatar_path ?? null, avatar_style: p.author_avatar_style ?? null } })))
-    if (!data || data.length < 500) return posts.map(withPostStory)
+    if (!data || data.length < 500) return posts.map(withPostStory).sort(comparePostActivity)
   }
 }
 

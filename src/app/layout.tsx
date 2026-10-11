@@ -41,7 +41,8 @@ export default function RootLayout({
                   </a>
                 </p>
               </div>
-              <nav className="commons-footer-policies" aria-label="Policies">
+              <nav className="commons-footer-policies" aria-label="Help and policies">
+                <Link href="/faq">FAQ</Link>
                 <Link href="/privacy">Privacy policy</Link>
                 <Link href="/terms">Terms of service</Link>
               </nav>

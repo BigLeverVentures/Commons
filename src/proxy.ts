@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
   if (['/api/jobs/notifications', '/api/jobs/storage-cleanup'].includes(request.nextUrl.pathname)) return NextResponse.next()
   const path = request.nextUrl.pathname
   const previewApi = path === '/api/website-preview' || path === '/api/fellows/search'
-  const publicPage = path === '/privacy' || path === '/terms' || path === '/' || path === '/board' || path === '/invitations' || /^\/api\/share-image\/[0-9a-f-]{36}$/.test(path) || /^\/fellows\/[a-f0-9]{32}$/.test(path) || path === '/built' || path === '/projects' || path.startsWith('/projects/') || (path !== '/posts/new' && /^\/posts\/[^/]+$/.test(path))
+  const publicPage = path === '/faq' || path === '/privacy' || path === '/terms' || path === '/' || path === '/board' || path === '/invitations' || /^\/api\/share-image\/[0-9a-f-]{36}$/.test(path) || /^\/fellows\/[a-f0-9]{32}$/.test(path) || path === '/built' || path === '/projects' || path.startsWith('/projects/') || (path !== '/posts/new' && /^\/posts\/[^/]+$/.test(path))
   if (isPreviewMode()) return NextResponse.next()
   if (!hasSupabaseConfiguration()) {
     if (previewApi || publicPage || request.nextUrl.pathname === '/login') return NextResponse.next()

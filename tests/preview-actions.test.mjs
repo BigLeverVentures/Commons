@@ -19,6 +19,7 @@ function load(file, dependencies) {
 }
 
 function actions(userId = 'author', client = null) {
+  const revalidated = []
   const state = { posts: [{ id: 'post', user_id: 'author', status: 'open', title: 'Original' }], responses: [] }
   const api = load('src/app/(app)/posts/actions.ts', {
     'node:crypto': { randomUUID },
@@ -30,16 +31,16 @@ function actions(userId = 'author', client = null) {
     '@/lib/post-fields': load('src/lib/post-fields.ts', {}),
     '@/lib/collaborator-credits': load('src/lib/collaborator-credits.ts', {'./post-fields':load('src/lib/post-fields.ts', {})}),
     '@/lib/validate-credits': {validateCredits:async()=>null},
-    '@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {})}),
+    '@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {}),'./post-activity':load('src/lib/post-activity.ts', {})}),
     '@/lib/topics': load('src/lib/topics.ts', {}),
     'next/navigation': { redirect(url) { throw new Error(`redirect:${url}`) } },
-    'next/cache': { revalidatePath() {} },
+    'next/cache': { revalidatePath(path) { revalidated.push(path) } },
     '@/lib/mentions':load('src/lib/mentions.ts',{}),'@/lib/validate-mentions':{validateMentions:async()=>null},'@/lib/auth': { async requireAuth() { return { id: userId } } },
     '@/lib/runtime': { isPreviewMode() { return !client } },
     '@/lib/preview': { readPreview:()=>state, changePreview(change) { return change(state) } },
     '@/lib/supabase/server': { getSupabaseServerClient() { if (client) return client; throw new Error('Preview must never use the real database') } },
   })
-  return { api, state }
+  return { api, state, revalidated }
 }
 function form(fields) { const data = new FormData(); for (const [k,v] of Object.entries(fields)) data.set(k,v); return data }
 
@@ -110,7 +111,7 @@ test('profile saves standardize cohort names and reject invalid choices without 
     '@/lib/profile-photos': load('src/lib/profile-photos.ts', {}),
     'next/cache': { revalidatePath() {} },
     '@/lib/mentions':load('src/lib/mentions.ts',{}),'@/lib/validate-mentions':{validateMentions:async()=>null},'@/lib/auth': { async requireAuth() { return { id: 'author' } } },
-    '@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {})}),
+    '@/lib/invitations': load('src/lib/invitations.ts', {'./topics':load('src/lib/topics.ts', {}),'./post-activity':load('src/lib/post-activity.ts', {})}),
     '@/lib/topics': load('src/lib/topics.ts', {}),
     '@/lib/profile-presence': load('src/lib/profile-presence.ts', {}),
     '@/lib/cohorts': load('src/lib/cohorts.ts', {}),
@@ -289,3 +290,13 @@ test('database retry recovers a committed insert with a lost response, without d
  const {withPostStory}=load('src/lib/post-story.ts',{});const p={built_at:'2026-01-01',description:'Original',description_mentions:[],outcome_summary:'Latest',outcome_mentions:[{label_snapshot:'@Fellow'}]}
  const shown=withPostStory(p);assert.equal(shown.description,'Latest');assert.equal(shown.description_mentions.length,1);assert.equal(p.description,'Original');assert.equal(withPostStory({...p,built_at:null}).description,'Original')
  })
+
+test('confirming a post refreshes every activity surface without changing publication', async () => {
+ const {api,state,revalidated}=actions()
+ state.posts[0].created_at='2026-10-01T00:00:00Z'
+ const result=await api.confirmPostCurrent('post')
+ assert.equal(result.status,'success')
+ assert.equal(state.posts[0].created_at,'2026-10-01T00:00:00Z')
+ assert.ok(state.posts[0].confirmed_at)
+ for(const path of ['/board','/built','/projects','/invitations','/posts/post'])assert.ok(revalidated.includes(path))
+})
