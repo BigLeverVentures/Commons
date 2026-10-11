@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -5,6 +6,8 @@ import vm from 'node:vm'
 import ts from 'typescript'
 import { database, asUser, alice, bob, post } from './helpers/database.mjs'
 function load(file,dependencies={}) {
+ dependencies = {'@/config/community': communityConfig, ...dependencies}
+
   const exports={}
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,File,Buffer,require(name){if(!(name in dependencies))throw new Error(name);return dependencies[name]}})
   return exports

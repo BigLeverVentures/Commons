@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import type { Metadata } from 'next'
 import { loadInvitationPage } from '@/lib/invitation-data'
 import { interestsFor } from '@/lib/fellow-presence'
@@ -6,7 +7,7 @@ import { loadPosts, loadPublicPosts } from '@/lib/board-data'
 import { CommonsShell } from '@/components/CommonsShell'
 import { TopicBoard } from '@/components/TopicBoard'
 
-export const metadata: Metadata = { alternates: { canonical: 'https://commons.example.org/' } }
+export const metadata: Metadata = { alternates: { canonical: `${COMMUNITY.canonicalOrigin}/` } }
 
 export default async function Page() {
   const user = await currentUser()

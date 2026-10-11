@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import vm from 'node:vm'
 import ts from 'typescript'
-import {database,asUser,alice,bob,post} from './helpers/database.mjs'
+import {database,insertDemoIdentity,asUser,alice,bob,post} from './helpers/database.mjs'
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:name=>deps[name]});return exports}
 const api=load('src/lib/collaborator-credits.ts',{'./post-fields':load('src/lib/post-fields.ts')})
 const id='90000000-0000-4000-8000-000000000001',other='90000000-0000-4000-8000-000000000003'
@@ -16,7 +16,7 @@ test('credits preserve explicit empty selection, ordinary legacy names and disti
  const form=new FormData();form.set('collaborator_credits','[]');const fields=api.creditFields(form);assert.equal(fields.names.length,0)
 })
 test('database validates identity-backed credits and enforces canonical compatibility on direct writes',async()=>{
- const db=await database()
+ const db=await database();await insertDemoIdentity(db)
  try{
   await db.query('INSERT INTO public.fellow_identities(id,display_name) VALUES($1,$2)',[other,'Morgan Rivera'])
   const credits=[selected,{...selected,fellow_id:other},{kind:'text',name:'Outside collaborator'}]

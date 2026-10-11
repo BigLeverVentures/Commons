@@ -32,7 +32,7 @@ test('directory importer rejects incomplete and duplicate identity records', () 
 test('generated import SQL safely handles quotes and populates admission without exposing the directory', async () => {
   const db = new PGlite()
   try {
-    await db.exec("CREATE ROLE authenticated; CREATE ROLE anon; CREATE TABLE public.auth_email_allowlist(email text UNIQUE)")
+    await db.exec("CREATE ROLE authenticated; CREATE ROLE anon; CREATE ROLE service_role; CREATE TABLE public.auth_email_allowlist(email text UNIQUE)")
     await db.exec(fs.readFileSync('supabase/migrations/20261008000300_directory_suggestions.sql','utf8'))
     const sql = directorySQL([{record_id:'id-1',name:"O'Connor",contact_email:'person@example.test',bio_tagline:"Grower's field research",search_tags:'climate,ecology'}])
     await db.exec(sql)

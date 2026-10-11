@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import vm from 'node:vm'
 import ts from 'typescript'
-import {database,asUser,alice,bob,post} from './helpers/database.mjs'
+import {database,insertDemoIdentity,asUser,alice,bob,post} from './helpers/database.mjs'
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,TextEncoder,require:name=>deps[name]});return exports}
 const api=load('src/lib/mentions.ts'),id='90000000-0000-4000-8000-000000000001',label='@Morgan Rivera'
 function ref(text,start){return {fellow_id:id,start,end:start+Array.from(label).length,label_snapshot:label}}
@@ -20,10 +20,10 @@ test('editing before/after/boundaries shifts references; editing through labels 
  assert.equal(api.transformMentions(text,'@Morg Rivera built a thing',[mention]).length,0)
  assert.equal(api.transformMentions(text,'No one built a thing',[mention]).length,0)
  assert.equal(api.transformMentions(text,text+' today',[mention])[0].start,0)
- assert.equal(api.mentionQuery('mail deborah@example.test',24),null);assert.equal(api.mentionQuery('https://example.test/@Deb',24),null);assert.equal(api.mentionQuery('Hello @Deb',10).text,'Deb')
+ assert.equal(api.mentionQuery('mail morgan@example.test',24),null);assert.equal(api.mentionQuery('https://example.test/@Mor',24),null);assert.equal(api.mentionQuery('Hello @Mor',10).text,'Mor')
 })
 test('Postgres rejects forged, overlapping and excessive references, preserves renames and strips stale legacy spans',async()=>{
- const db=await database()
+ const db=await database();await insertDemoIdentity(db)
  try{
   const body='🌱 '+label+' and '+label,refs=[ref(body,2),ref(body,21)]
   await asUser(db,alice,"INSERT INTO public.posts(id,user_id,type,title,description,description_mentions) VALUES($1,$2,'project','Together',$3,$4)",[post,alice,body,JSON.stringify(refs)])
@@ -40,7 +40,7 @@ test('Postgres rejects forged, overlapping and excessive references, preserves r
  }finally{await db.close()}
 })
 test('private note mentions save atomically and never appear in anonymous projections',async()=>{
- const db=await database()
+ const db=await database();await insertDemoIdentity(db)
  try{
   await asUser(db,alice,"INSERT INTO public.posts(id,user_id,type,title,description) VALUES($1,$2,'ask','Help','Story')",[post,alice])
   const body='Hi\n'+label,refs=[ref(body,3)]

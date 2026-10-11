@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import { topicFor } from './topics'
 export const INVITATION_KINDS = ['feedback','introduction','testing','mentoring','collaboration','offer','other'] as const
 export type Participation = { text: string; kind: typeof INVITATION_KINDS[number]; commitment: string | null; deadline: string | null }
@@ -11,7 +12,7 @@ export function invitationFields(form: FormData): {participation:Participation|n
   if (form.get('participation_enabled') === 'on') {
     const value=text('participation_text'),kind=text('participation_kind'),commitment=text('participation_commitment'),deadline=text('participation_deadline')
     if (!value || value.length>160) return {error:'Write your participation invitation in up to 160 characters.'}
-    if (!INVITATION_KINDS.includes(kind as Participation['kind'])) return {error:'Choose how fellows can get involved.'}
+    if (!INVITATION_KINDS.includes(kind as Participation['kind'])) return {error:'Choose how people can get involved.'}
     if (commitment.length>80) return {error:'Describe the commitment in up to 80 characters.'}
     if (deadline && (!/^\d{4}-\d{2}-\d{2}$/.test(deadline) || !Number.isFinite(Date.parse(`${deadline}T23:59:59.999Z`)) || new Date(`${deadline}T23:59:59.999Z`).toISOString().slice(0,10)!==deadline)) return {error:'Choose a valid deadline date.'}
     participation={text:value,kind:kind as Participation['kind'],commitment:commitment||null,deadline:deadline||null}
@@ -26,7 +27,7 @@ export function invitationFields(form: FormData): {participation:Participation|n
 }
 export function invitationsFor(posts:InvitationPost[], now=Date.now()): Invitation[] {
   return posts.flatMap(post=>{
-    const topic=topicFor(post.tags,post.topic).id, author=post.fellow?.name || 'A fellow'
+    const topic=topicFor(post.tags,post.topic).id, author=post.fellow?.name || `A ${COMMUNITY.memberSingular}`
     const base={postType:post.type,postId:post.id,authorKey:post.user_id || `name:${author}`,author,avatarPath:post.fellow?.avatar_path,avatarStyle:post.fellow?.avatar_style,topic,updatedAt:post.updated_at,confirmedAt:post.confirmed_at ?? null}
     const result:Invitation[]=[]
     const contribution=post.participation

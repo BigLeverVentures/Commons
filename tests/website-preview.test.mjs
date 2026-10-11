@@ -1,9 +1,12 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import vm from 'node:vm'
 import ts from 'typescript'
 function load(file,deps={}) {
+ deps = {'@/config/community': communityConfig, ...deps}
+
   const exports={}
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,TextEncoder,URL,URLSearchParams,AbortSignal,fetch,Response,Request,require:name=>deps[name]})
   return exports

@@ -1,4 +1,5 @@
 'use client'
+import { COMMUNITY } from '@/config/community'
 
 import { useActionState, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -75,7 +76,7 @@ function EmailForm({ urlError }: { urlError: string | null }) {
           </form>
 
           <p className="mt-6 text-center text-xs text-[var(--obsidian-muted)]">
-            Only admitted members can sign in.
+            Only admitted {COMMUNITY.memberPlural} can sign in.
           </p>
         </>
       )}

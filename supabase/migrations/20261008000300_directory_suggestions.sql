@@ -5,8 +5,11 @@ CREATE TABLE public.directory_profiles (
   name text NOT NULL CHECK (char_length(name) BETWEEN 1 AND 200),
   description text NOT NULL DEFAULT '' CHECK (char_length(description) <= 2000),
   tags text[] NOT NULL DEFAULT '{}',
-  source_url text NOT NULL DEFAULT 'https://directory.example.org',
+  source_url text NOT NULL DEFAULT '',
   imported_at timestamptz NOT NULL DEFAULT now()
 );
 ALTER TABLE public.directory_profiles ENABLE ROW LEVEL SECURITY;
 -- No anon/authenticated policies. Only the service role/admin imports and reads this index.
+
+REVOKE ALL ON public.directory_profiles FROM PUBLIC, anon, authenticated;
+GRANT ALL ON public.directory_profiles TO service_role;

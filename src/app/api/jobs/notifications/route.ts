@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
           db.auth.admin.getUserById(response.data.user_id),
           db.from('fellows').select('name,cohort').eq('id',response.data.user_id).maybeSingle(),
         ])
-        if (identity.error || profile.error) throw new Error('Could not verify introducing fellow.')
-        if (!identity.data.user?.email_confirmed_at || !identity.data.user.email) throw new Error('Introducing fellow has no confirmed email.')
+        if (identity.error || profile.error) throw new Error('Could not verify the sender.')
+        if (!identity.data.user?.email_confirmed_at || !identity.data.user.email) throw new Error('The sender has no confirmed email.')
         draft = introductionDraft(item.id,data.user.email,post!,appUrl,{name:profile.data?.name ?? null,cohort:profile.data?.cohort ?? null,email:identity.data.user.email,note:response.data.note})
       } else draft = notificationDraft(item.kind,item.id,data.user.email,post!,appUrl)
       await sendNotification(draft,{key,from})

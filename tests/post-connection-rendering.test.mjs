@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -12,6 +13,7 @@ test('social strip stays beneath the post and before the connection action for g
  for(const type of ['ask','offer','project'])for(const member of [false,true]) {
   const post={id:'post',user_id:'author',type,status:'open',title:'Example',description:'Main content',tags:[],created_at:'2026-10-09',fellow:{name:'Author'}}
   const page=load('src/app/posts/[id]/page.tsx',name=>{
+   if(name==='@/config/community')return communityConfig
    if(name==='react/jsx-runtime')return jsx
    if(name==='next/link')return {default:({children,href})=>React.createElement('a',{href},children)}
    if(name==='next/navigation')return {notFound(){throw Error('not found')}}

@@ -8,7 +8,7 @@ const previewIdentities:FellowIdentity[]=[DEMO_IDENTITY,{id:'90000000-0000-4000-
 const cache=new Map<string,{expires:number;rows:FellowSearchResult[]}>()
 export async function searchFellowIdentities(value:string):Promise<FellowSearchResult[]> {
  const query=identityQuery(value)
- if(!query)throw new Error('Use 2–80 characters to search for a fellow.')
+ if(!query)throw new Error('Use 2–80 characters to search for a person.')
  if(isPreviewMode())return previewIdentities.filter(identity=>identity.active&&identity.display_name.toLowerCase().includes(query.toLowerCase())).slice(0,10).map(safeSearchResult)
  const db=getSupabaseAdminClient()
  if(!db)throw new Error('Fellow search is temporarily unavailable.')

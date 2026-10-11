@@ -1,4 +1,5 @@
 'use client'
+import { COMMUNITY } from '@/config/community'
 
 import { useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
@@ -37,7 +38,7 @@ export function ProfileBanner() {
     <div className="border-b border-[var(--forest)]/20 bg-[var(--forest)]/5 px-4 py-3">
       <div className="mx-auto flex max-w-3xl items-center justify-between">
         <p className="text-sm">
-          Welcome! <Link href="/profile" className="font-medium text-[var(--forest)] underline">Add your name</Link> so other fellows know who you are.
+          Welcome! <Link href="/profile" className="font-medium text-[var(--forest)] underline">Add your name</Link> so other {COMMUNITY.memberPlural} know who you are.
         </p>
         <button
           onClick={handleDismiss}

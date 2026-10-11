@@ -15,11 +15,11 @@ export function initialPreviewState(): PreviewState {
   const ideas = [
     ['project', 'A coastline worth restoring', 'A small coastal restoration pilot is taking shape. Looking for ecology experience and someone who loves bringing a community together.', 'climate,restoration', 0],
     ['ask', 'Take a sensor into the field', 'Our soil sensor works on the bench. Could you help us design a useful field trial with local growers?', 'ecology,hardware', 2],
-    ['offer', 'A fresh pair of founder eyes', 'Two hours a month for a fellow working through an early venture. Happy to help with the first customer conversation or the next difficult decision.', 'founders,mentorship', 0],
+    ['offer', 'A fresh pair of founder eyes', 'Two hours a month for a member working through an early venture. Happy to help with the first customer conversation or the next difficult decision.', 'founders,mentorship', 0],
     ['project', 'A community health toolkit', 'Making practical health information easier to use. Looking for a designer and a community partner to test a small first version.', 'health,design', 1],
     ['project', 'Learning across the Pacific', 'An exchange between educators who want to learn from each other. We are starting with one conversation, then seeing what grows.', 'education,learning', 1],
     ['offer', 'An introduction can change things', 'Working across Aotearoa and Australia? I can help with a few thoughtful introductions to people in community enterprise.', 'introductions,community', 2],
-    ['ask', 'Make a useful tool, together', 'Seeking a fellow who enjoys small, purposeful software projects. We have an idea for a local sharing library and need help choosing the simplest approach.', 'software,technology', 0],
+    ['ask', 'Make a useful tool, together', 'Seeking a member who enjoys small, purposeful software projects. We have an idea for a local sharing library and need help choosing the simplest approach.', 'software,technology', 0],
   ] as const
   const posts: Post[] = ideas.map(([type, title, description, tags, author], i) => ({
     id: `20000000-0000-4000-8000-${String(i + 1).padStart(12, '0')}`,

@@ -5,11 +5,11 @@ export const bob = '10000000-0000-4000-8000-000000000002'
 export const outsider = '10000000-0000-4000-8000-000000000003'
 export const post = '20000000-0000-4000-8000-000000000001'
 
-export async function database() {
-  return initializeDatabase(new PGlite())
+export async function database(options) {
+  return initializeDatabase(new PGlite(), options)
 }
 
-export async function initializeDatabase(db) {
+export async function initializeDatabase(db, { members = true } = {}) {
   await db.exec(`
     DO $$ BEGIN
       IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated; END IF;
@@ -34,7 +34,7 @@ export async function initializeDatabase(db) {
   for (const migration of fs.readdirSync('supabase/migrations').filter(f => f.endsWith('.sql')).sort()) {
     await db.exec(fs.readFileSync(`supabase/migrations/${migration}`, 'utf8'))
   }
-  await db.exec(`
+  if (members) await db.exec(`
     INSERT INTO public.auth_email_allowlist(email) VALUES ('alice@example.test'), ('bob@example.test');
     INSERT INTO auth.users VALUES ('${alice}', 'alice@example.test'), ('${bob}', 'bob@example.test');
     UPDATE public.fellows SET name = 'Alice' WHERE id = '${alice}';
@@ -51,3 +51,8 @@ export async function asUser(db, id, sql, params = []) {
   })
 }
 
+
+// Explicit fictional identity fixture: production migrations and seeds remain empty.
+export async function insertDemoIdentity(db) {
+  await db.query("INSERT INTO public.fellow_identities(id,display_name) VALUES($1,$2)", ["90000000-0000-4000-8000-000000000001", "Morgan Rivera"])
+}

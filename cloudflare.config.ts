@@ -12,8 +12,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     worker: defineWorker({
-      name: "commons",
-      domains: ["commons.example.org", "www.commons.example.org"],
+      name: env.CLOUDFLARE_WORKER_NAME || "commons",
+      domains: (env.CLOUDFLARE_DOMAINS || "").split(",").map(domain => domain.trim()).filter(Boolean),
       workersDev: true,
       entrypoint: "./src/worker.ts",
       triggers: [triggers.scheduled({ schedule: "*/5 * * * *" })],
@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
         NEXT_PUBLIC_SUPABASE_URL: bindings.text(url),
         NEXT_PUBLIC_SUPABASE_ANON_KEY: bindings.text(key),
         SUPABASE_SERVICE_ROLE_KEY: bindings.secret(),
-        APP_URL: bindings.text("https://commons.example.org"),
+        APP_URL: bindings.text(env.APP_URL || "https://commons.example.org"),
       },
     }),
   };
