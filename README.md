@@ -19,6 +19,7 @@ Open [http://127.0.0.1:3100](http://127.0.0.1:3100). Choose a fictional member t
 
 Follow [the installation guide](docs/INSTALL.md) for a fresh Supabase project, sign-in email, admission, and a Node deployment. Configure your identity in [`src/config/community.ts`](src/config/community.ts), provide your own domain and contact address, and review the public privacy and terms pages before inviting members.
 
+- [October 2026 browsing and help update](docs/updates/2026-10-browsing-and-help.md)
 - [Public release checklist](docs/release-checklist.md)
 - [Configuration and customization](docs/configuration.md)
 - [Integrations and data flows](docs/integrations.md)
@@ -29,7 +30,7 @@ Follow [the installation guide](docs/INSTALL.md) for a fresh Supabase project, s
 
 ## Included
 
-Public asks, offers, projects and outcomes; topic and type filters; local full-text search; member profiles; 48 local illustrated avatars; public photos and PDF/image attachments; independent reactions; collaborator credits and mentions; private introductions; optional notification emails; and background file cleanup. Supabase row-level security restricts private records and writes. Public uploads are not a place for confidential material.
+Public asks, offers, projects and outcomes; topic and type filters; local full-text search; member profiles; 48 local illustrated avatars; public photos and PDF/image attachments; independent reactions; a public FAQ; collaborator credits and mentions; private introductions; optional notification emails; and background file cleanup. Supabase row-level security restricts private records and writes. Public uploads are not a place for confidential material.
 
 ## Verification and release limits
 

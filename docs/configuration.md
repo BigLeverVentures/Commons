@@ -18,7 +18,7 @@ Edit [`src/config/community.ts`](../src/config/community.ts), then rebuild. `COM
 
 Keep topic IDs `planet`, `enterprise`, `learning`, `care`, `technology`, and `open`: they are persisted database values. Renaming labels is presentation customization; changing identifiers requires coordinated schema/data migration and application updates. Topic inference tags and colors are in `src/lib/topics.ts`. Cohort definitions are in `src/lib/cohorts.ts`; enabling cohort display does not import a private directory or admit members.
 
-Review `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`, authentication templates, and artwork for your actual operator practices. Identity configuration does not make policy statements accurate automatically. Publish only contact details you intend to expose.
+Review `src/app/faq/page.tsx`, `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`, authentication templates, and artwork for your actual operator practices. The FAQ uses the configured community identity and support address; adapt its admission instructions to your actual membership process. Identity configuration does not make policy statements accurate automatically. Publish only contact details you intend to expose.
 
 Regenerate the static home share image after changing name, origin, or headline:
 

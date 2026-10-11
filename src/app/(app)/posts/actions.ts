@@ -343,6 +343,6 @@ export async function confirmPostCurrent(postId: string): Promise<ActionState> {
     const {data,error}=await db.from('posts').update({confirmed_at:new Date().toISOString()}).eq('id',postId).eq('user_id',user.id).select('id').maybeSingle()
     if(error||!data)return {status:'error',message:'We couldn’t save this confirmation.'}
   }
-  revalidatePath('/board');revalidatePath(`/posts/${postId}`)
+  revalidatePath('/board');revalidatePath('/built');revalidatePath('/projects');revalidatePath('/invitations');revalidatePath(`/posts/${postId}`)
   return {status:'success',message:'Your invitation is confirmed as current.'}
 }

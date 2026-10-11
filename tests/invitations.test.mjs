@@ -8,7 +8,7 @@ import {database,asUser,alice,bob,post} from './helpers/database.mjs'
 function load(file,deps={}) {
  deps = {'@/config/community': communityConfig, ...deps}
 const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,require:name=>deps[name]});return exports}
-const topics=load('src/lib/topics.ts'),api=load('src/lib/invitations.ts',{'./topics':topics})
+const topics=load('src/lib/topics.ts'),api=load('src/lib/invitations.ts',{'./topics':topics,'./post-activity':load('src/lib/post-activity.ts')})
 function form(values){const data=new FormData();for(const [key,value] of Object.entries(values))data.set(key,value);return data}
 const invitation={text:'Review our pitch',kind:'feedback',commitment:'15 minutes',deadline:null}
 const share={text:'Help reach educators',audience:'Educators',message:'Come see our work'}
@@ -29,14 +29,17 @@ test('sharing eligibility is independent from paused, ended and expired contribu
  assert.equal(api.invitationsFor([{...base,participation:{...invitation,deadline:'2026-10-08'}}],now).length,2)
  const legacy=api.invitationsFor([{...base,type:'offer',participation:null,sharing:null}],now);assert.equal(legacy[0].text,'A pilot');assert.equal(legacy[0].action,'Explore this offer')
 })
-test('compact selection mixes opportunities, deduplicates authors/posts and is stable for a fixed day',()=>{
- const posts=[base,{...base,id:'offer',user_id:bob,type:'offer',participation:null,sharing:null},{...base,id:'share',user_id:'third',participation:null,status:'ended'}]
- const rows=api.invitationsFor(posts,now),chosen=api.selectInvitations(rows,now)
- assert.equal(chosen.length,3);assert.equal(new Set(chosen.map(row=>row.authorKey)).size,3);assert.equal(new Set(chosen.map(row=>row.postId)).size,3)
- assert.deepEqual(Array.from(new Set(chosen.map(row=>row.kind))).sort(),['offer','request','share'])
- assert.equal(JSON.stringify(chosen),JSON.stringify(api.selectInvitations(rows,now)))
- assert.equal(api.selectInvitations(rows,now,0).length,0)
- const confirmed=api.invitationsFor([{...base,confirmed_at:'2026-10-08T12:00:00Z'}],now);assert.equal(confirmed[0].publishedAt,base.created_at)
+test('digest preserves all invitations and orders edits and confirmations by activity',()=>{
+ const posts=Array.from({length:9},(_,i)=>({...base,id:`post-${i}`,sharing:null,created_at:`2026-10-0${i+1}T00:00:00Z`}))
+ posts[0].updated_at='2026-10-10T12:00:00Z'
+ posts[1].confirmed_at='2026-10-11T12:00:00Z'
+ const rows=api.invitationsFor(posts,now)
+ assert.equal(rows.length,9)
+ assert.equal(rows[0].postId,'post-1');assert.equal(rows[1].postId,'post-0')
+ assert.equal(api.invitationDate(rows[0]).label,'Confirmed')
+ assert.equal(api.invitationDate(rows[1]).label,'Updated')
+ assert.equal(rows[0].publishedAt,posts[1].created_at)
+ assert.equal(api.invitationsFor([base],now).length,2)
 })
 test('database validates invitations, owns publication/confirmation dates and exposes only public opportunity rows',async()=>{
  const db=await database()

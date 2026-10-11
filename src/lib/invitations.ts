@@ -1,4 +1,5 @@
 import { COMMUNITY } from '@/config/community'
+import { postActivity } from './post-activity'
 import { topicFor } from './topics'
 export const INVITATION_KINDS = ['feedback','introduction','testing','mentoring','collaboration','offer','other'] as const
 export type Participation = { text: string; kind: typeof INVITATION_KINDS[number]; commitment: string | null; deadline: string | null }
@@ -37,28 +38,12 @@ export function invitationsFor(posts:InvitationPost[], now=Date.now()): Invitati
     }
     if(post.sharing) result.push({...base,id:`${post.id}:sharing`,text:post.sharing.text,action:'Help share',kind:'share',publishedAt:post.sharing_published_at || post.created_at,commitment:null,deadline:null})
     return result
-  }).sort((a,b)=>b.publishedAt.localeCompare(a.publishedAt)||a.id.localeCompare(b.id))
+  }).sort(compareInvitationActivity)
 }
-function hash(value:string) {let result=0;for(const char of value) result=(Math.imul(result,31)+char.charCodeAt(0))>>>0;return result}
-export function selectInvitations(candidates:Invitation[], now=Date.now(), limit=6):Invitation[] {
-  // Day-stable rotation among invitations published on the same UTC date.
-  const day=new Date(now).toISOString().slice(0,10)
-  const ordered=[...candidates].sort((a,b)=>b.publishedAt.slice(0,10).localeCompare(a.publishedAt.slice(0,10))||hash(`${day}:${a.id}`)-hash(`${day}:${b.id}`)||a.id.localeCompare(b.id))
-  const authors=new Set<string>(),posts=new Set<string>(),chosen:Invitation[]=[]
-  const add=(item:Invitation) => {if(authors.has(item.authorKey)||posts.has(item.postId))return false;chosen.push(item);authors.add(item.authorKey);posts.add(item.postId);return true}
-  if(limit<=0)return []
-  for(const kind of ['request','offer','share']) {if(chosen.length>=limit)break;const item=ordered.find(item=>item.kind===kind&&!authors.has(item.authorKey)&&!posts.has(item.postId));if(item)add(item)}
-  for(const item of ordered) {
-    if(authors.has(item.authorKey)||posts.has(item.postId)) continue
-    add(item)
-    if(chosen.length>=limit) break
-  }
-  return chosen
+export function compareInvitationActivity(a: Invitation, b: Invitation): number {
+  return Date.parse(invitationDate(b).date) - Date.parse(invitationDate(a).date) || a.id.localeCompare(b.id)
 }
 
 export function invitationDate(invitation: Invitation): { label: string; date: string } {
-  let result = { label: 'Published', date: invitation.publishedAt }
-  if (invitation.updatedAt && Date.parse(invitation.updatedAt) > Date.parse(result.date)) result = { label: 'Updated', date: invitation.updatedAt }
-  if (invitation.confirmedAt && Date.parse(invitation.confirmedAt) >= Date.parse(result.date)) result = { label: 'Confirmed', date: invitation.confirmedAt }
-  return result
+  return postActivity({ created_at: invitation.publishedAt, updated_at: invitation.updatedAt, confirmed_at: invitation.confirmedAt })
 }

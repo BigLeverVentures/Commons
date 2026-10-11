@@ -28,6 +28,7 @@ test('board and post readers select the author relationship when reaction actors
   vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, {
     exports, require(name) {
       if (name === '@/lib/post-story') { const result = {}; vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/post-story.ts', 'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:result}); return result }
+      if (name === './post-activity') { const result = {}; vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/post-activity.ts', 'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText, {exports:result}); return result }
       if (name === 'server-only' || name === '@/lib/preview') return {}
       if (name === '@/lib/runtime') return { isPreviewMode: () => false }
       if (name === '@/lib/supabase/server') return { getSupabaseServerClient: async () => db }

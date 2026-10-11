@@ -2,6 +2,7 @@
 :root {
   --page:#f8f2e9;
   --surface:#fffdf9;
+  --nav-surface:#eee4d7;
   --ink:#0d121d;
   --muted:#4d5262;
   --border:#e4d8c6;
@@ -9,6 +10,7 @@
   --on-action:#f8f2e9;
   --link:#8d5431;
   --reaction-ink:#000;
+  --browse-action-ink:var(--ink);
   --type-ask:#007599;
   --type-offer:var(--success);
   --type-project:var(--link);
@@ -28,6 +30,7 @@
 :root[data-theme="dark"] {
   --page:#0d121d;
   --surface:#161d2b;
+  --nav-surface:#202b3e;
   --ink:#f8f2e9;
   --muted:#a9afbd;
   --border:#263043;
@@ -35,6 +38,7 @@
   --on-action:#0d121d;
   --link:#fdd087;
   --reaction-ink:var(--link);
+  --browse-action-ink:var(--link);
   --type-ask:#56d4f3;
   --success:#6fcf97;
   --danger:#ff8a7a;
@@ -45,6 +49,7 @@
   :root:not([data-theme]) {
   --page:#0d121d;
   --surface:#161d2b;
+  --nav-surface:#202b3e;
   --ink:#f8f2e9;
   --muted:#a9afbd;
   --border:#263043;
@@ -52,6 +57,7 @@
   --on-action:#0d121d;
   --link:#fdd087;
   --reaction-ink:var(--link);
+  --browse-action-ink:var(--link);
   --type-ask:#56d4f3;
   --success:#6fcf97;
   --danger:#ff8a7a;
