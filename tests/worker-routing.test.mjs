@@ -28,7 +28,7 @@ test('www links redirect to HTTPS canonical host with paths and query parameters
     const expected = new URL(source)
     expected.protocol = 'https:'
     expected.hostname = 'commons.example.org'
-    const response = await app.fetch(new Request(source), {}, {})
+    const response = await app.fetch(new Request(source), { APP_URL: "https://commons.example.org" }, {})
     assert.equal(response.status, 308)
     assert.equal(response.headers.get('location'), expected.href)
   }

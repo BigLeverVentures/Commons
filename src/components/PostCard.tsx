@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import Link from 'next/link'
 import { postStatusLabel } from '@/lib/post-status'
 import { FellowAvatar } from '@/components/FellowAvatar'
@@ -23,7 +24,7 @@ function timeAgo(date: string): string {
 
 export function PostCard({ post }: { post: PostWithFellow }) {
   const style = TYPE_STYLES[post.type] ?? TYPE_STYLES.ask
-  const displayName = post.fellow?.name ?? 'A fellow'
+  const displayName = post.fellow?.name ?? `A ${COMMUNITY.memberSingular}`
 
   return (
     <Link
@@ -64,7 +65,7 @@ export function PostCard({ post }: { post: PostWithFellow }) {
       <div className="flex items-center gap-2 mt-3 text-xs text-[var(--obsidian-muted)]">
         <FellowAvatar name={displayName} path={post.fellow?.avatar_path} style={post.fellow?.avatar_style} />
         <span>{displayName}</span>
-        {post.fellow?.cohort && (
+        {COMMUNITY.cohortsEnabled && post.fellow?.cohort && (
           <>
             <span>&middot;</span>
             <span>{post.fellow.cohort}</span>

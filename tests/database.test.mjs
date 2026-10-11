@@ -40,9 +40,10 @@ test('guests can browse every post type while comments, contacts, and directory 
       for (const forbidden of ['email','user_id','bio','location','note']) assert.equal(forbidden in p, false)
     }
     assert.equal((await db.query('SELECT * FROM public.public_projects')).rows.length, 1)
-    for (const table of ['posts','fellows','responses','auth_email_allowlist','directory_profiles','notification_outbox']) {
+    for (const table of ['posts','fellows','responses','auth_email_allowlist','notification_outbox']) {
       assert.equal((await db.query('SELECT * FROM public.' + table)).rows.length, 0, table)
     }
+    await assert.rejects(db.query('SELECT * FROM public.directory_profiles'), /permission denied/)
     await assert.rejects(db.query("UPDATE public.public_posts SET title='Hijacked'"), /cannot update view/)
     await assert.rejects(db.query("INSERT INTO public.responses(post_id,user_id,note) VALUES ($1,$2,'Guest comment')", [post,bob]), /row-level security/)
   } finally { await db.close() }

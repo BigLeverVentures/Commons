@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import Link from 'next/link'
 import { InvitationRow } from './InvitationRow'
 import { selectInvitations } from '@/lib/invitations'
@@ -6,7 +7,7 @@ import type { Invitation } from '@/lib/invitations'
 export function Happening({ invitations, now }: { invitations: Invitation[]; now: number }) {
   const chosen = selectInvitations(invitations, now, 5)
   return <section aria-labelledby="happening-title" className="happening">
-    <h3 id="happening-title" className="type-card">Happening in the Commons</h3>
+    <h3 id="happening-title" className="type-card">Happening in {COMMUNITY.name}</h3>
     {chosen.length ? <div className="invitation-grid">
       {chosen.map(item => <InvitationRow key={item.id} invitation={item} compactMobile />)}
     </div> : <div className="happening-empty text-sm text-[var(--obsidian-muted)]">

@@ -4,11 +4,11 @@ import { pathToFileURL } from 'node:url'
 
 const str = value => typeof value === 'string' ? value.trim() : ''
 export function normalizeDirectory(rows) {
-  if (!Array.isArray(rows) || rows.length === 0) throw new Error('A non-empty array of fellow records is required.')
+  if (!Array.isArray(rows) || rows.length === 0) throw new Error('A non-empty array of member records is required.')
   const emails = new Set(), ids = new Set()
   return rows.map(row => {
     const record_id = str(row.record_id), email = str(row.contact_email).toLowerCase(), name = str(row.name)
-    if (!record_id || !name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Every record needs a stable record_id, name, and contact_email. Use the full directory export, not the old demo subset.')
+    if (!record_id || !name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Every record needs a stable record_id, name, and contact_email. Map your source fields to the normalized input schema before importing.')
     if (emails.has(email) || ids.has(record_id)) throw new Error('Duplicate directory identity or email; resolve before importing.')
     emails.add(email); ids.add(record_id)
     const extra = typeof row.extra_json === 'string' ? JSON.parse(row.extra_json) : row.extra_json ?? {}

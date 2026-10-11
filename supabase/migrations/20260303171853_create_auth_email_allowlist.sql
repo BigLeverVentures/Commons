@@ -23,6 +23,5 @@ BEGIN
 END;
 $$;
 
--- Note: Wire this function as a "before_user_created" hook via:
--- Supabase Dashboard > Authentication > Hooks (production)
--- or supabase/config.toml [auth.hook.before_user_created] (local)
+-- A later migration installs this trigger on auth.users. This trigger function
+-- is not a Supabase JSON Auth Hook; do not configure it in Authentication > Hooks.

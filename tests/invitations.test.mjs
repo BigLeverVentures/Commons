@@ -1,10 +1,13 @@
+import { communityConfig } from './helpers/community.mjs'
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import vm from 'node:vm'
 import ts from 'typescript'
 import {database,asUser,alice,bob,post} from './helpers/database.mjs'
-function load(file,deps={}) {const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,require:name=>deps[name]});return exports}
+function load(file,deps={}) {
+ deps = {'@/config/community': communityConfig, ...deps}
+const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,require:name=>deps[name]});return exports}
 const topics=load('src/lib/topics.ts'),api=load('src/lib/invitations.ts',{'./topics':topics})
 function form(values){const data=new FormData();for(const [key,value] of Object.entries(values))data.set(key,value);return data}
 const invitation={text:'Review our pitch',kind:'feedback',commitment:'15 minutes',deadline:null}

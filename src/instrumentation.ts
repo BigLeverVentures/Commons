@@ -7,7 +7,7 @@ const knownFailures = new Set([
   'Unable to load current invitations.',
   'Unable to load this post.',
   'Unable to load responses.',
-  'Unable to load this fellow profile.',
+  'Unable to load this profile.',
 ])
 
 // Request headers, URLs, cookies, arbitrary messages and stacks can contain secrets.

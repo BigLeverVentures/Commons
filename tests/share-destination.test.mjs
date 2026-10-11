@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -6,7 +7,7 @@ import ts from 'typescript'
 import {database,asUser,alice,bob,post} from './helpers/database.mjs'
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,URL,process,require:name=>deps[name]});return exports}
 const fields=load('src/lib/post-fields.ts'),files=load('src/lib/attachment-fields.ts')
-const {shareDestination}=load('src/lib/share-destination.ts',{'./post-fields':fields,'./attachment-fields':files})
+const {shareDestination}=load('src/lib/share-destination.ts',{'./post-fields':fields,'./attachment-fields':files,'@/config/community':communityConfig})
 const file={path:`${alice}/00000000-0000-4000-8000-000000000001.pdf`,name:'Report.pdf',type:'application/pdf',size:100}
 test('sharing resolves only the chosen saved resource and degrades missing destinations to the public post',()=>{
  const item={id:post,outcome_url:'https://example.org',attachment:file}

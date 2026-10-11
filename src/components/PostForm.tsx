@@ -216,13 +216,13 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
         <label htmlFor="description" className="block text-sm font-medium mb-1">
           {built ? 'What did you make happen?' : 'Description'}
         </label>
-        <MentionTextarea name="description" value={description} onChange={setDescription} initialMentions={fields ? draftJson(fields.description_mentions) : post?.description_mentions} limit={built?1000:2000} placeholder={built?'Tell the story and the fellowship connection behind it…':'Add details so fellows know how to help or connect…'} />
+        <MentionTextarea name="description" value={description} onChange={setDescription} initialMentions={fields ? draftJson(fields.description_mentions) : post?.description_mentions} limit={built?1000:2000} placeholder={built?'Tell the story and the community connection behind it…':'Add details so members know how to help or connect…'} />
       </div>
 
       {built && !post && <div className="space-y-2"><label htmlFor="collaboration_status" className="block text-sm font-medium">Where is the project now?</label><select id="collaboration_status" name="collaboration_status" value={collaborationStatus} onChange={event => setCollaborationStatus(event.target.value)} className="w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-3 text-sm">{PROJECT_STATES.map(state => <option key={state.value} value={state.value}>{state.label}</option>)}</select><p className="text-xs text-[var(--obsidian-muted)]">Welcoming projects appear on both the active board and Built here. Every state keeps the story in Built here.</p></div>}
 
       <WebsitePreviewField label="Website or link (optional)" link={fields?.website_url_draft ?? fields?.outcome_url ?? post?.outcome_url ?? ''} preview={fields ? draftJson(fields.link_preview) : post?.link_preview} onPendingChange={setPreviewPending} onLinkChange={setWebsite} />
-      {built && <p className="text-xs text-[var(--obsidian-muted)]">An earlier board post is not required. Celebrate something fellows built together.</p>}
+      {built && <p className="text-xs text-[var(--obsidian-muted)]">An earlier board post is not required. Celebrate something members built together.</p>}
       <div className="space-y-2 rounded-xl border border-[var(--border-control)] p-4">
         <label htmlFor="attachment" className="block text-sm font-medium">Media or document (optional)</label>
         <input id="attachment" name="attachment" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" aria-describedby="attachment-help" className="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--pounamu)]/10 file:px-4 file:py-2 file:font-medium file:text-[var(--pounamu)]" onChange={event => { const file = event.target.files?.[0]; setAttachmentName(file?.name ?? ''); setAttachmentUrl(file ? URL.createObjectURL(file) : null); if (file) { missingAttachment.current = ''; setNeedsAttachment(false) } setAttachmentError(file && file.size > MAX_ATTACHMENT_BYTES ? 'Choose a file up to 2 MB.' : '') }} />
@@ -234,13 +234,13 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
       </div>
 
       <div className="rounded-xl border border-[var(--border-control)] p-4 space-y-2">
-        <label htmlFor="share_target" className="block text-sm font-medium">What should fellows share?</label>
+        <label htmlFor="share_target" className="block text-sm font-medium">What should members share?</label>
         <select id="share_target" name="share_target" value={chosenTarget} onChange={event=>setShareTarget(event.target.value)} className="w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-3 text-sm">
           {website.trim()&&<option value="website">Website — {website}</option>}
           {hasFile&&<option value="attachment">Attachment — {attachmentName||existingAttachment?.name}</option>}
           <option value="post">This public board post</option>
         </select>
-        <p className="text-xs text-[var(--obsidian-muted)]">This destination supplies the featured preview and the Share link. Your board post is public; fellows sign in to participate. Removing the selected attachment switches sharing to this post.</p>
+        <p className="text-xs text-[var(--obsidian-muted)]">This destination supplies the featured preview and the Share link. Your board post is public; members sign in to participate. Removing the selected attachment switches sharing to this post.</p>
       </div>
       <InvitationFields initialDraft={fields} participation={post?.participation} sharing={post?.sharing} author={author} postType={post?.type ?? (kind === 'built' ? 'project' : kind)} />
       <CollaboratorPicker initialNamesDraft={fields?.collaborator_names_draft} canonical={fields ? draftJson(fields.collaborator_credits) : post?.collaborator_credits} legacy={post?.collaborators ?? []} />
@@ -277,7 +277,7 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
         {previewMessage&&<div role="status" className="my-3 text-sm text-[var(--obsidian-muted)]"><p>{previewMessage}</p><button type="button" disabled={previewPending||isPending} onClick={previewPost} className="mt-2 underline disabled:opacity-50">{previewPending?'Capturing website image…':'Retry website preview'}</button></div>}
         {previewNames.length>0&&<p className="my-4 text-sm">In collaboration with {previewNames.join(', ')}</p>}
         <div className="flex flex-wrap gap-1 my-4">{tags.split(',').map(tag=>tag.trim()).filter(Boolean).map((tag,index)=><span key={index} className="rounded-full bg-[var(--limestone)] px-2 py-0.5 text-xs">{tag}</span>)}</div>
-        <div className="flex items-center gap-2 text-sm text-[var(--obsidian-muted)]"><FellowAvatar name={author.name} path={author.avatar_path} style={author.avatar_style}/>Posted by {author.name||'this fellow'}</div>
+        <div className="flex items-center gap-2 text-sm text-[var(--obsidian-muted)]"><FellowAvatar name={author.name} path={author.avatar_path} style={author.avatar_style}/>Posted by {author.name||'this member'}</div>
         </PostStory>
         <div className="reaction-toolbar mt-4" aria-label="Preview social actions"><span className="inline-flex items-center gap-2"><ReactButtonIcon /> React</span><span><LinkIcon external /> {chosenTarget==='website'?'Share website':chosenTarget==='attachment'?(displayedAttachment?.type==='application/pdf'?'Share report':'Share image'):'Share post'}</span></div>
         <button type="button" onClick={()=>{setPreviewData(null);requestAnimationFrame(()=>formRef.current?.querySelector<HTMLInputElement>('#title')?.focus())}} className="mt-5 underline">Back to editing</button>

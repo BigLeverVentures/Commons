@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -5,7 +6,7 @@ import vm from 'node:vm'
 import ts from 'typescript'
 import { database,asUser,alice,bob,post } from './helpers/database.mjs'
 const exports = {}
-vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/notifications.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,AbortSignal,fetch})
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/notifications.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,AbortSignal,fetch,require:name=>name==='@/config/community'?communityConfig:undefined})
 
 test('responses queue once; private delivery jobs cannot be invoked by fellows or guests', async () => {
   const db = await database()

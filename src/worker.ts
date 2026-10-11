@@ -7,11 +7,14 @@ const worker = {
   ...app,
   fetch(...args: Parameters<typeof app.fetch>) {
     const url = new URL(args[0].url)
-    if (url.hostname === 'www.commons.example.org') {
-      url.protocol = 'https:'
-      url.hostname = 'commons.example.org'
-      url.port = ''
-      return Response.redirect(url, 308)
+    const origin = (args[1] as { APP_URL?: string } | undefined)?.APP_URL
+    if (origin) {
+      const canonical = new URL(origin)
+      if (canonical.protocol === 'https:' && url.hostname === `www.${canonical.hostname}`) {
+        url.protocol = canonical.protocol
+        url.host = canonical.host
+        return Response.redirect(url, 308)
+      }
     }
     return app.fetch(...args)
   },

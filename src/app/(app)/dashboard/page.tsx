@@ -1,5 +1,6 @@
 import { loadPosts } from '@/lib/board-data'
 import { StatsCard } from '@/components/StatsCard'
+import { COMMUNITY } from '@/config/community'
 
 export default async function DashboardPage() {
   const posts = await loadPosts()
@@ -16,7 +17,7 @@ export default async function DashboardPage() {
     <div>
       <h1 className="type-title mb-6">Dashboard</h1>
       <p className="text-sm text-[var(--obsidian-muted)] mb-6">
-        What&apos;s alive in the fellowship right now.
+        What&apos;s happening in {COMMUNITY.name} right now.
       </p>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -40,7 +41,7 @@ export default async function DashboardPage() {
           value={postsThisMonth ?? 0}
         />
         <StatsCard
-          label="Active Fellows"
+          label={`Active ${COMMUNITY.memberPlural}`}
           value={uniquePosters}
           subtitle="posted this month"
         />

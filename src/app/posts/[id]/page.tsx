@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import { DeletePost } from '@/components/DeletePost'
 import { LinkIcon } from '@/components/LinkIcon'
 import { ClearPostDraft } from '@/components/ClearPostDraft'
@@ -48,7 +49,7 @@ export default async function PostDetailPage({
   const saved = (await searchParams).saved
   const confirmation = saved === 'built' ? 'Your Built here project was successfully published.' : saved === 'created' ? 'Your post was successfully published.' : saved === 'updated' ? 'Your post was successfully saved.' : null
   const suggestions = isAuthor && post.status === 'open' ? await connectionsFor(post) : []
-  const displayName = post.fellow?.name ?? 'A fellow'
+  const displayName = post.fellow?.name ?? `A ${COMMUNITY.memberSingular}`
 
   const responses: ResponseWithFellow[] = user ? await loadResponses(id, user.id, isAuthor) : []
   const hasResponded = !isAuthor && responses.length > 0
@@ -116,7 +117,7 @@ export default async function PostDetailPage({
         <div className="flex items-center gap-2 text-xs text-[var(--obsidian-muted)]">
           <FellowAvatar name={displayName} path={post.fellow?.avatar_path} style={post.fellow?.avatar_style} />
           Posted by <Link href={authorProfileHref(post.user_id)} className="underline underline-offset-4">{displayName}</Link>
-          {post.fellow?.cohort && ` · ${post.fellow.cohort}`}
+          {COMMUNITY.cohortsEnabled && post.fellow?.cohort && ` · ${post.fellow.cohort}`}
           {' · '}
           {new Date(post.created_at).toLocaleDateString()}
           {post.updated_at !== post.created_at && ` · Updated ${new Date(post.updated_at).toLocaleDateString()}`}
@@ -127,7 +128,7 @@ export default async function PostDetailPage({
       <Reactions title={post.title} sharing={post.sharing} website={post.outcome_url} attachment={post.attachment} target={post.share_target} postId={id} counts={appreciation.counts} selected={appreciation.selected} member={!!user} isAuthor={isAuthor} built={!!post.built_at} />
       {!isAuthor && (post.status === 'open' || hasResponded) && <section aria-label="Connect with this post" className="mt-5 rounded-2xl border border-[var(--pounamu)]/30 bg-[var(--surface)] p-5">
         <h2 className="type-card">{hasResponded ? 'Your connection' : connection.action}</h2>
-      {post.participation && <section className="mt-4 rounded-xl bg-[var(--limestone)] p-5"><p className="eyebrow">How fellows can get involved</p><h2 className="type-card mt-2">{post.participation.text}</h2>{post.participation.commitment && <p className="mt-2 text-sm">Commitment: {post.participation.commitment}</p>}{post.participation.deadline && <p className="mt-2 text-sm">Deadline: {post.participation.deadline} (UTC)</p>}</section>}
+      {post.participation && <section className="mt-4 rounded-xl bg-[var(--limestone)] p-5"><p className="eyebrow">How {COMMUNITY.memberPlural} can get involved</p><h2 className="type-card mt-2">{post.participation.text}</h2>{post.participation.commitment && <p className="mt-2 text-sm">Commitment: {post.participation.commitment}</p>}{post.participation.deadline && <p className="mt-2 text-sm">Deadline: {post.participation.deadline} (UTC)</p>}</section>}
       {/* Non-author view: respond form */}
       {user && !isAuthor && post.status === 'open' && !hasResponded && (
         <div className="mt-6">
@@ -142,10 +143,10 @@ export default async function PostDetailPage({
           <p className="text-xs text-[var(--obsidian-muted)]">Saved and visible to the author. Replies arrive by email.</p>
         </section>
       )}
-      {!user && <p className="mt-4 text-sm"><Link href="/login" className="primary-button">{post.status === 'open' ? `Sign in to ${connection.action.toLowerCase()}` : 'Fellow sign in'}</Link><span className="mt-3 block text-xs text-[var(--obsidian-muted)]">Private notes are visible only to you and the author. Replies arrive by email.</span></p>}
+      {!user && <p className="mt-4 text-sm"><Link href="/login" className="primary-button">{post.status === 'open' ? `Sign in to ${connection.action.toLowerCase()}` : `${COMMUNITY.memberSingular} sign in`}</Link><span className="mt-3 block text-xs text-[var(--obsidian-muted)]">Private notes are visible only to you and the author. Replies arrive by email.</span></p>}
       </section>}
       {isAuthor && <ConfirmCurrent postId={id} />}
-      {isAuthor && post.participation && <section className="mt-4 rounded-xl bg-[var(--limestone)] p-5"><p className="eyebrow">How fellows can get involved</p><h2 className="type-card mt-2">{post.participation.text}</h2>{post.participation.commitment && <p className="mt-2 text-sm">Commitment: {post.participation.commitment}</p>}{post.participation.deadline && <p className="mt-2 text-sm">Deadline: {post.participation.deadline} (UTC)</p>}</section>}
+      {isAuthor && post.participation && <section className="mt-4 rounded-xl bg-[var(--limestone)] p-5"><p className="eyebrow">How {COMMUNITY.memberPlural} can get involved</p><h2 className="type-card mt-2">{post.participation.text}</h2>{post.participation.commitment && <p className="mt-2 text-sm">Commitment: {post.participation.commitment}</p>}{post.participation.deadline && <p className="mt-2 text-sm">Deadline: {post.participation.deadline} (UTC)</p>}</section>}
 
       {user && post.fellow && <FellowAbout profileHref={authorProfileHref(post.user_id)} name={post.fellow.name} bio={post.fellow.bio} links={post.fellow.personal_links} contributions={post.fellow.contribution_preferences} />}
       {isAuthor && post.status === 'open' && <ConnectionSuggestions suggestions={suggestions} />}
@@ -171,9 +172,9 @@ export default async function PostDetailPage({
                   <div className="flex items-center gap-2 mb-2 text-sm">
                     <FellowAvatar name={r.fellow?.name} path={r.fellow?.avatar_path} style={r.fellow?.avatar_style} />
                     {r.fellow ? <Link href={authorProfileHref(r.fellow.id)} className="font-medium underline underline-offset-4 hover:text-[var(--pounamu)]">
-                      {r.fellow.name || 'Fellow'}
-                    </Link> : <span className="font-medium">Fellow</span>}
-                    {r.fellow?.cohort && (
+                      {r.fellow.name || COMMUNITY.memberSingular}
+                    </Link> : <span className="font-medium">{COMMUNITY.memberSingular}</span>}
+                    {COMMUNITY.cohortsEnabled && r.fellow?.cohort && (
                       <span className="text-[var(--obsidian-muted)]">
                         {r.fellow.cohort}
                       </span>

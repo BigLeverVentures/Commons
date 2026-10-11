@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import Link from 'next/link'
 import { SignOutButton } from './SignOutButton'
 import { MobileMenu } from './MobileMenu'
@@ -8,7 +9,7 @@ export function Nav({ fellow }: { fellow?: { name: string | null; avatar_path: s
     <nav className="commons-nav sticky top-0 z-10 border-b border-[var(--obsidian)]/10 bg-[var(--surface)]">
       <div className="mx-auto flex commons-nav-inner page-inset items-center justify-between">
         <Link href="/board" className="wordmark">
-          Commons
+          {COMMUNITY.wordmark}
         </Link>
 
         <div className="flex items-center gap-3">

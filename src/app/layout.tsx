@@ -1,3 +1,4 @@
+import { COMMUNITY } from '@/config/community'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -5,14 +6,14 @@ import './globals.css'
 import { APPEARANCE_SCRIPT } from '@/lib/appearance'
 import { AppearanceControl } from '@/components/AppearanceControl'
 
-const shareDescription = 'Where community members share ideas, offer help, and build things together.'
-const shareImage = { url: 'https://commons.example.org/images/commons-share.png', width: 1200, height: 630, alt: 'Commons. The fellowship continues, here. A question, an offer, an idea — that’s where things start. A crowd of raised hands in many skin tones.' }
+const shareDescription = `Where community ${COMMUNITY.memberPlural} share ideas, offer help, and build things together.`
+const shareImage = { url: `${COMMUNITY.canonicalOrigin}/images/commons-share.png`, width: 1200, height: 630, alt: `${COMMUNITY.name}. ${COMMUNITY.heroHeadline}` }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://commons.example.org'),
-  openGraph: { title: 'Commons — The fellowship continues, here.', description: shareDescription, url: 'https://commons.example.org/', siteName: 'Commons', type: 'website', images: [shareImage] },
-  twitter: { card: 'summary_large_image', title: 'Commons — The fellowship continues, here.', description: shareDescription, images: [{ url: shareImage.url, alt: shareImage.alt }] },
-  title: 'Commons community board',
+  metadataBase: new URL(COMMUNITY.canonicalOrigin),
+  openGraph: { title: `${COMMUNITY.name} — ${COMMUNITY.heroHeadline}`, description: shareDescription, url: `${COMMUNITY.canonicalOrigin}/`, siteName: COMMUNITY.name, type: 'website', images: [shareImage] },
+  twitter: { card: 'summary_large_image', title: `${COMMUNITY.name} — ${COMMUNITY.heroHeadline}`, description: shareDescription, images: [{ url: shareImage.url, alt: shareImage.alt }] },
+  title: `${COMMUNITY.name} community board`,
   description: shareDescription,
 }
 
@@ -35,11 +36,10 @@ export default function RootLayout({
               <div>
                 <p>
                   Support or login issues?{' '}
-                  <a className="inline-block underline underline-offset-4" href="mailto:support@commons.example.org">
-                    support@commons.example.org
+                  <a className="inline-block underline underline-offset-4" href={`mailto:${COMMUNITY.supportEmail}`}>
+                    {COMMUNITY.supportEmail}
                   </a>
                 </p>
-                <p className="commons-footer-note"><em>Please note that this is a volunteer effort; support and corrections are handled as capacity allows.</em></p>
               </div>
               <nav className="commons-footer-policies" aria-label="Policies">
                 <Link href="/privacy">Privacy policy</Link>
@@ -48,11 +48,10 @@ export default function RootLayout({
             </div>
             <hr className="commons-footer-rule" />
             <p>
-              Built and administered by{' '}
-              <a className="underline underline-offset-4" href="https://bigleverventures.com/">
+              Built on Commons by{' '}
+              <a className="underline underline-offset-4" href="https://github.com/BigLeverVentures/Commons">
                 Big Lever Ventures
-              </a>{' '}
-              as a volunteer contribution to the fellowship. Free to use.
+              </a>
             </p>
             <div className="footer-appearance"><AppearanceControl /></div>
           </div>

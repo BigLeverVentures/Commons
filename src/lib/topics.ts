@@ -1,10 +1,12 @@
+import { COMMUNITY } from '@/config/community'
+
 export const TOPICS = [
-  { id: 'planet', name: 'Planet & place', description: 'Regeneration, climate, and the places we call home.', tags: ['climate', 'ecology', 'restoration', 'regeneration', 'food', 'planet'], color: 'sage' },
-  { id: 'enterprise', name: 'Enterprise & impact', description: 'Ideas, ventures, and resources for meaningful change.', tags: ['enterprise', 'funding', 'founders', 'investment', 'mentorship'], color: 'peach' },
-  { id: 'learning', name: 'Learning & connection', description: 'Sharing knowledge and bringing people together.', tags: ['learning', 'education', 'community', 'introductions', 'connection'], color: 'blue' },
-  { id: 'care', name: 'Care & wellbeing', description: 'Healthier people, stronger communities.', tags: ['health', 'care', 'wellbeing', 'design', 'inclusion'], color: 'lavender' },
-  { id: 'technology', name: 'Tools & possibility', description: 'Technology that helps good ideas take shape.', tags: ['technology', 'software', 'ai', 'hardware', 'data'], color: 'yellow' },
-  { id: 'open', name: 'Open possibilities', description: 'Something new, or an idea between worlds.', tags: [], color: 'sand' },
+  { id: 'planet', ...COMMUNITY.topics.planet, tags: ['climate', 'ecology', 'restoration', 'regeneration', 'food', 'planet'], color: 'sage' },
+  { id: 'enterprise', ...COMMUNITY.topics.enterprise, tags: ['enterprise', 'funding', 'founders', 'investment', 'mentorship'], color: 'peach' },
+  { id: 'learning', ...COMMUNITY.topics.learning, tags: ['learning', 'education', 'community', 'introductions', 'connection'], color: 'blue' },
+  { id: 'care', ...COMMUNITY.topics.care, tags: ['health', 'care', 'wellbeing', 'design', 'inclusion'], color: 'lavender' },
+  { id: 'technology', ...COMMUNITY.topics.technology, tags: ['technology', 'software', 'ai', 'hardware', 'data'], color: 'yellow' },
+  { id: 'open', ...COMMUNITY.topics.open, tags: [], color: 'sand' },
 ] as const
 
 export function topicFor(tags: string[] | null, explicit?: string | null) {

@@ -1,4 +1,5 @@
 'use client'
+import { COMMUNITY } from '@/config/community'
 
 import { startTransition, useActionState, useRef, useState } from 'react'
 import { updateProfile } from '@/app/(app)/profile/actions'
@@ -51,7 +52,7 @@ export function ProfileForm({
 
   return (
     <form onSubmit={event => { event.preventDefault(); const data = new FormData(event.currentTarget); startTransition(() => formAction(data)) }} className="profile-form space-y-8 w-full">
-      <p className="max-w-[68ch] text-sm text-[var(--obsidian-muted)]">Your name, photo, bio and website links appear on your public Commons profile when you publish a post. Email and notification settings remain private.</p>
+      <p className="max-w-[68ch] text-sm text-[var(--obsidian-muted)]">Your name, photo, bio and website links appear on your public {COMMUNITY.name} profile when you publish a post. Email and notification settings remain private.</p>
       <section className="profile-section" aria-labelledby="profile-details-heading">
         <h2 id="profile-details-heading" className="type-card mb-4">Your profile</h2>
         <div className="profile-fields">
@@ -82,6 +83,7 @@ export function ProfileForm({
             />
           </div>
 
+          {COMMUNITY.cohortsEnabled ? (
           <div>
             <label htmlFor="cohort" className="block text-sm font-medium mb-1">
               Cohort
@@ -99,6 +101,7 @@ export function ProfileForm({
               {COHORTS.map(option => <option key={option} value={option}>{option}</option>)}
             </select>
           </div>
+          ) : <input type="hidden" name="cohort" value={cohort} />}
 
           <div>
             <label htmlFor="location" className="block text-sm font-medium mb-1">
@@ -181,7 +184,7 @@ export function ProfileForm({
         <div className="space-y-4">
           <label className="flex items-start gap-3 rounded-xl bg-[var(--surface)] border border-[var(--border-control)] p-4 text-sm">
             <input name="introduction_emails" type="checkbox" defaultChecked={introductionEmails} className="mt-1" />
-            <span>Email me private notes on my posts<span className="block text-xs text-[var(--obsidian-muted)] mt-1">Receive private notes from fellows about your posts. Notes remain available on your posts if you turn this off. This doesn’t affect replies to conversations you start.</span></span>
+            <span>Email me private notes on my posts<span className="block text-xs text-[var(--obsidian-muted)] mt-1">Receive private notes from {COMMUNITY.memberPlural} about your posts. Notes remain available on your posts if you turn this off. This doesn’t affect replies to conversations you start.</span></span>
           </label>
           <label className="flex items-start gap-3 rounded-xl bg-[var(--surface)] border border-[var(--border-control)] p-4 text-sm">
             <input name="email_notifications" type="checkbox" defaultChecked={emailNotifications} className="mt-1" />

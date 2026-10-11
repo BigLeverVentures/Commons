@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -6,6 +7,7 @@ import ts from 'typescript'
 import { randomUUID } from 'node:crypto'
 import { database, asUser, alice, bob } from './helpers/database.mjs'
 function load(file, dependencies = {}) {
+  dependencies = {'@/config/community': communityConfig, ...dependencies}
   const js = ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText
   const exports = {}
   vm.runInNewContext(js,{exports,TextEncoder,process,URL,File,Buffer,console,require(name){

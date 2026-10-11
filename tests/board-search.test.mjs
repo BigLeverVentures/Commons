@@ -1,3 +1,4 @@
+import { communityConfig } from './helpers/community.mjs'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -6,6 +7,8 @@ import ts from 'typescript'
 import MiniSearch from 'minisearch'
 
 function load(file, dependencies = {}) {
+ dependencies = {'@/config/community': communityConfig, ...dependencies}
+
   const exports = {}
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(file, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
