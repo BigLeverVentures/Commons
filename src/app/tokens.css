@@ -1,0 +1,61 @@
+/* Core roles, status colors, and semantic post types. */
+:root {
+  --page:#f8f2e9;
+  --surface:#fffdf9;
+  --ink:#0d121d;
+  --muted:#4d5262;
+  --border:#e4d8c6;
+  --action:#0d121d;
+  --on-action:#f8f2e9;
+  --link:#8d5431;
+  --reaction-ink:#000;
+  --type-ask:#007599;
+  --type-offer:var(--success);
+  --type-project:var(--link);
+  --success:#1f7a4d;
+  --danger:#b42318;
+  color-scheme:light;
+  --surface-soft:color-mix(in srgb,var(--page) 90%,var(--link));
+  --hero-surface:color-mix(in srgb,var(--page) 90%,var(--link));
+  --border-control:color-mix(in srgb,var(--ink) 50%,var(--surface));
+  --success-subtle:color-mix(in srgb,var(--surface) 92%,var(--success));
+  --danger-subtle:color-mix(in srgb,var(--surface) 92%,var(--danger));
+  --shadow:0 8px 28px color-mix(in srgb,var(--link) 12%,transparent);
+  /* Compatibility aliases for existing components; no extra palette. */
+  --limestone:var(--page); --obsidian:var(--ink); --obsidian-muted:var(--muted);
+  --terracotta:var(--link); --forest:var(--success); --pounamu:var(--link);
+}
+:root[data-theme="dark"] {
+  --page:#0d121d;
+  --surface:#161d2b;
+  --ink:#f8f2e9;
+  --muted:#a9afbd;
+  --border:#263043;
+  --action:#fdd34a;
+  --on-action:#0d121d;
+  --link:#fdd087;
+  --reaction-ink:var(--link);
+  --type-ask:#56d4f3;
+  --success:#6fcf97;
+  --danger:#ff8a7a;
+  color-scheme:dark;
+  --shadow:0 8px 28px #00000066;
+}
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme]) {
+  --page:#0d121d;
+  --surface:#161d2b;
+  --ink:#f8f2e9;
+  --muted:#a9afbd;
+  --border:#263043;
+  --action:#fdd34a;
+  --on-action:#0d121d;
+  --link:#fdd087;
+  --reaction-ink:var(--link);
+  --type-ask:#56d4f3;
+  --success:#6fcf97;
+  --danger:#ff8a7a;
+    color-scheme:dark;
+  --shadow:0 8px 28px #00000066;
+  }
+}

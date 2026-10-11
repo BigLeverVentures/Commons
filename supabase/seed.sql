@@ -1,0 +1,2 @@
+-- No production admissions or personal identities are included.
+-- Add verified members to public.auth_email_allowlist as an administrator.

@@ -1,0 +1,28 @@
+/* One source of truth for typography across Commons. */
+:root {
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'Inter', Arial, sans-serif;
+  --type-hero:2.5rem; --type-title:2rem; --type-section:1.625rem; --type-card:1.25rem;
+  --type-body:1rem; --type-support:.875rem; --type-caption:.8125rem; --leading-body:1.65;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
+  --space-8:32px; --space-12:48px; --space-16:64px; --space-24:96px;
+  --radius-sm:6px; --radius-md:12px; --radius-lg:24px; --radius-pill:9999px;
+  --container-max:1200px; --measure:68ch; --tap-target:44px; --page-gutter:20px;
+}
+@media(min-width:768px) {:root {--type-hero:4rem;--type-title:3rem;--type-section:2.25rem;--type-card:1.5rem;--page-gutter:24px;}}
+@media(min-width:1024px) {:root {--page-gutter:32px;}}
+@theme inline {
+  --font-sans:var(--font-body);
+  --font-serif:var(--font-display);
+}
+body {font-family:var(--font-body);font-size:var(--type-body);line-height:var(--leading-body);}
+.type-title,.type-section,.type-card {font-family:var(--font-display);font-weight:600;letter-spacing:-.025em;}
+.type-title {font-size:var(--type-title);line-height:1.15;}
+.type-section {font-size:var(--type-section);line-height:1.2;}
+.type-card {font-size:var(--type-card);line-height:1.25;}
+.type-label {font-family:var(--font-body);font-size:var(--type-support);line-height:1.5;font-weight:600;}
+.type-support {font-size:var(--type-support);line-height:1.5;}
+.type-caption {font-size:var(--type-caption);line-height:1.5;}
+
+/* Shared content width also protects the gutter if outer padding changes. */
+.page-inset {box-sizing:border-box;width:calc(100% - 40px);width:calc(100% - max(var(--page-gutter),env(safe-area-inset-left)) - max(var(--page-gutter),env(safe-area-inset-right)));min-width:0;margin-inline:auto;}
