@@ -25,6 +25,10 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/auth/confirm",
+        headers: [{ key: "Referrer-Policy", value: "strict-origin" }],
+      },
     ];
   },
 };

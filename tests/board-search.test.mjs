@@ -59,3 +59,26 @@ test('a newly created index reflects current posts without retaining removed rec
   assert.equal(changed('ocean')[0].id, 'new')
   assert.equal(createBoardSearch([])('ocean').length, 0)
 })
+
+test('browsing avoids indexing; first search builds once and subsequent searches reuse it', () => {
+  let builds = 0
+  class CountingSearch extends MiniSearch {
+    constructor(options) {
+      super(options)
+      builds += 1
+    }
+  }
+  const { createBoardSearch: createLazySearch } = load('src/lib/board-search.ts', {
+    minisearch: CountingSearch, './topics': topics,
+  })
+  const find = createLazySearch(posts)
+  assert.equal(builds, 0)
+  assert.equal(find(''), posts)
+  assert.equal(find('   '), posts)
+  assert.equal(builds, 0)
+  assert.equal(find('startup')[0].id, 'mentor')
+  assert.equal(builds, 1)
+  assert.equal(find('institute')[0].id, 'institute')
+  assert.equal(find(''), posts)
+  assert.equal(builds, 1)
+})

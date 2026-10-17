@@ -4,7 +4,7 @@ Signed-in members now land directly in the board or Built here, without the intr
 
 The recent-invitations digest shows up to three actual rows on every screen size. Additional eligible invitations remain available by scrolling; there are no reserved empty rows. Invitations and unsearched board posts are ordered by their latest publication, edit, or confirmation. Search continues to rank matching results by relevance. Confirming availability refreshes all affected views without changing the original publication date.
 
-Website preview images fit in full, preserve their proportions, and no longer zoom on hover. The public FAQ is linked from the footer and covers posting, profiles, interests, invitations, privacy, and browser sign-in.
+Website preview images initially fit in full, preserved their proportions, and stopped zooming on hover. The later [controls and preview update](2026-10-controls-previews-and-sign-in.md) supersedes fitting with a uniform 2:1 top-aligned cover window. The public FAQ is linked from the footer and covers posting, profiles, interests, invitations, privacy, and browser sign-in.
 
 ## Upgrade
 

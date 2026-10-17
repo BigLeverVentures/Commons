@@ -35,7 +35,7 @@ export function AttachmentPreview({url,type,name}:{url:string;type:string;name:s
   void draw()
   return ()=>{cancelled=true;clearTimeout(timer);render?.cancel();void task?.destroy().catch(()=>{})}
  },[url,type])
- return <div className="attachment-preview-image">
- {type==='application/pdf'?<>{!failed&&<canvas ref={canvas} aria-label={`First page of ${name}`} style={{visibility:ready?'visible':'hidden'}}/>}{(!ready||failed)&&<span className="attachment-preview-placeholder">📄<span>{failed?'PDF · Open to read':'Preparing PDF preview…'}</span></span>}</>:!failed?<Image src={url} alt={name} width={720} height={480} unoptimized onError={()=>setFailed(true)}/>:<span className="attachment-preview-placeholder">🖼️<span>Image · Open to view</span></span>}
+ return <div className={`attachment-preview-image${type === 'application/pdf' ? ' attachment-preview-pdf' : ''}`}>
+ {type==='application/pdf'?<><span className="attachment-pdf-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>PDF</span>{!failed&&<canvas ref={canvas} role="img" aria-label={`Preview of the top of the first page of ${name}; open the document to read in full`} style={{visibility:ready?'visible':'hidden'}}/>}{(!ready||failed)&&<span className="attachment-preview-placeholder">📄<span>{failed?'PDF · Open to read':'Preparing PDF preview…'}</span></span>}</>:!failed?<Image src={url} alt={name} width={720} height={480} unoptimized onError={()=>setFailed(true)}/>:<span className="attachment-preview-placeholder">🖼️<span>Image · Open to view</span></span>}
  </div>
 }

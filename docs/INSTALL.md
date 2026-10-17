@@ -67,7 +67,7 @@ Copy [`supabase/templates/sign-in.html`](../supabase/templates/sign-in.html) int
 <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email">Sign in</a>
 ```
 
-Replace the displayed Commons name, support contact, and subject with your community’s values before installing both templates. The source-project footer credit is optional and does not identify your administrator. Never paste a received one-time link into the template. `/auth/confirm` verifies `token_hash` with `type=email`, sets session cookies, and redirects to `/board`. Open the link in the browser you intend to use; other browser apps have separate cookie stores. SMTP sign-in mail and optional Resend notification mail are independent.
+Replace the displayed Commons name, support contact, and subject with your community’s values before installing both templates. The source-project footer credit is optional and does not identify your administrator. Never paste a received one-time link into the template. `/auth/confirm` first opens a passive page. Pressing Sign in submits a same-origin POST that verifies `token_hash` with `type=email`, sets session cookies, and redirects to `/board`. GET/HEAD email previews do not verify the token. Preserve the direct TokenHash URL above in both hosted templates; a provider ConfirmationURL can consume the token before this page. Open the link in the browser you intend to use; other browser apps have separate cookie stores. SMTP sign-in mail and optional Resend notification mail are independent.
 
 ## 5. Build and serve
 

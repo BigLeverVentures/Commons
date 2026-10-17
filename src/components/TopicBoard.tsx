@@ -1,6 +1,7 @@
 'use client'
 import { COMMUNITY } from '@/config/community'
 import { LinkIcon } from './LinkIcon'
+import { TopicFilter } from './TopicFilter'
 import { ConnectionIllustration } from './ConnectionIllustration'
 
 import { useMemo, useState } from 'react'
@@ -58,7 +59,7 @@ export function TopicBoard({ posts, publicOnly = false, builtOnly = false, inter
       <p className="board-results" aria-live="polite">{filtered.length} {filtered.length === 1 ? 'connection' : 'connections'} to explore</p>
       <div className="board-controls">
         <label className="search-field"><span className="sr-only">Search the board</span><span aria-hidden="true">⌕</span><input type="search" placeholder={`An idea, a topic, a ${COMMUNITY.memberSingular}…`} value={search} onChange={e => setSearch(e.target.value)} /></label>
-        <label><span className="sr-only">Topic</span><select value={topic} onChange={e => setTopic(e.target.value)}><option value="all">All topics</option>{!publicOnly && <option value="interests">My interests</option>}{TOPICS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label>
+        <TopicFilter value={topic} onChange={setTopic} publicOnly={publicOnly} />
         {!builtOnly && <label className="closed-filter"><input type="checkbox" checked={closed} onChange={e => setClosed(e.target.checked)} />Include other states</label>}
       </div>
       <div className="kind-tabs" role="group" aria-label="Post type">{[['all','Everything'],['project','Projects'],['ask','Asks'],['offer','Offers']].map(([value,label]) => <button key={value} type="button" aria-pressed={kind === value} onClick={() => setKind(value)}>{label}</button>)}</div>
@@ -73,7 +74,7 @@ export function TopicBoard({ posts, publicOnly = false, builtOnly = false, inter
             <p className="idea-activity"><time dateTime={postActivity(p).date}>{postActivity(p).label} {freshness(postActivity(p).date, now || Date.now())}</time></p>
             <h4>{p.title}</h4>{p.built_at && <p className="text-xs text-[var(--obsidian-muted)]">{postStatusLabel(p.status, p.type)}</p>}<p className="idea-summary">{p.description}</p>
             {!!p.collaborators?.length && <p className="text-xs text-[var(--obsidian-muted)]">In collaboration with {p.collaborators.join(', ')}</p>}
-            {builtOnly && p.outcome_url && <p className="built-website-label">Explore the project <LinkIcon /></p>}
+            {builtOnly && p.outcome_url && <p className="built-website-label">Explore project <LinkIcon /></p>}
             <div className="idea-author"><FellowAvatar name={p.fellow?.name} path={p.fellow?.avatar_path} style={p.fellow?.avatar_style} /><span>{p.fellow?.name || `A ${COMMUNITY.memberSingular}`}</span><span className="card-open">View post <LinkIcon /></span></div>
           </Link>)}</div>
         </section>

@@ -9,6 +9,7 @@ import type { ActionState } from '@/types'
 const ERROR_MESSAGES: Record<string, string> = {
   expired: 'Your link has expired. Request a new one.',
   used: 'This link has already been used. Request a new one.',
+  unavailable: 'Sign-in is temporarily unavailable. Please try again shortly.',
 }
 
 export function LoginForm() {
@@ -41,7 +42,7 @@ function EmailForm({ urlError }: { urlError: string | null }) {
         <div role="status" className="rounded-lg border border-[var(--forest)]/20 bg-[var(--forest)]/5 p-4 text-center">
           <p className="text-sm font-medium text-[var(--forest)]">Check your email</p>
           <p className="text-xs text-[var(--obsidian-muted)] mt-1">
-            If your email is registered, you&apos;ll receive a magic link.
+            If your email is registered, you&apos;ll receive a sign-in link. Open the newest email, then press Sign in on the page that opens. You don&apos;t need a password.
           </p>
         </div>
       ) : (
@@ -71,7 +72,7 @@ function EmailForm({ urlError }: { urlError: string | null }) {
               disabled={isPending}
               className="w-full primary-button hover:opacity-90 disabled:opacity-50"
             >
-              {isPending ? 'Sending...' : 'Send magic link'}
+              {isPending ? 'Sending...' : 'Email me a sign-in link'}
             </button>
           </form>
 

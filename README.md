@@ -19,6 +19,7 @@ Open [http://127.0.0.1:3100](http://127.0.0.1:3100). Choose a fictional member t
 
 Follow [the installation guide](docs/INSTALL.md) for a fresh Supabase project, sign-in email, admission, and a Node deployment. Configure your identity in [`src/config/community.ts`](src/config/community.ts), provide your own domain and contact address, and review the public privacy and terms pages before inviting members.
 
+- [October 2026 controls, previews and sign-in update](docs/updates/2026-10-controls-previews-and-sign-in.md)
 - [October 2026 browsing and help update](docs/updates/2026-10-browsing-and-help.md)
 - [Public release checklist](docs/release-checklist.md)
 - [Configuration and customization](docs/configuration.md)

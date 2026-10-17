@@ -1,4 +1,5 @@
 'use client'
+import { SelectMenu } from './SelectMenu'
 import { COMMUNITY } from '@/config/community'
 
 import { startTransition, useActionState, useRef, useState } from 'react'
@@ -49,6 +50,7 @@ export function ProfileForm({
   )
 
   const selectedCohort = normalizeCohort(cohort)
+  const [cohortValue, setCohortValue] = useState(selectedCohort === undefined ? cohort : selectedCohort ?? '')
 
   return (
     <form onSubmit={event => { event.preventDefault(); const data = new FormData(event.currentTarget); startTransition(() => formAction(data)) }} className="profile-form space-y-8 w-full">
@@ -88,18 +90,11 @@ export function ProfileForm({
             <label htmlFor="cohort" className="block text-sm font-medium mb-1">
               Cohort
             </label>
-            <select
-              id="cohort"
-              name="cohort"
-              defaultValue={selectedCohort === undefined ? cohort : selectedCohort ?? ''}
-              className="w-full rounded-lg border border-[var(--obsidian)]/10 bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--pounamu)]"
-            >
-              <option value="">Not specified</option>
-              {selectedCohort === undefined && (
-                <option value={cohort}>Choose your cohort (current: {cohort})</option>
-              )}
-              {COHORTS.map(option => <option key={option} value={option}>{option}</option>)}
-            </select>
+            <SelectMenu id="cohort" name="cohort" label="Cohort" value={cohortValue} onChange={setCohortValue} options={[
+              { value: '', label: 'Not specified' },
+              ...(selectedCohort === undefined ? [{ value: cohort, label: `Choose your cohort (current: ${cohort})` }] : []),
+              ...COHORTS.map(option => ({ value: option, label: option })),
+            ]} />
           </div>
           ) : <input type="hidden" name="cohort" value={cohort} />}
 

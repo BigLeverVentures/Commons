@@ -1,5 +1,7 @@
 'use client'
 
+import { SelectMenu } from './SelectMenu'
+
 import { updatePostStatus } from '@/app/(app)/posts/actions'
 import { postStates } from '@/lib/post-status'
 import { useState, useTransition } from 'react'
@@ -29,9 +31,7 @@ export function StatusToggle({ postId, currentStatus, postType }: { postId: stri
   return <div className="space-y-2">
     <label htmlFor={id} className="block text-xs text-[var(--obsidian-muted)]">{postType === 'project' ? 'Project state' : 'Availability'}</label>
     <div className="flex flex-wrap gap-2">
-      <select id={id} value={selected} disabled={pending} onChange={event => { setSelected(event.target.value); setMessage('') }} className="max-w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-2 text-sm">
-        {choices.map(state => <option key={state.value} value={state.value}>{state.label}</option>)}
-      </select>
+      <SelectMenu id={id} label={postType === 'project' ? 'Project state' : 'Availability'} value={selected} disabled={pending} onChange={value => { setSelected(value); setMessage('') }} options={choices} />
       <button type="button" disabled={pending || selected === currentStatus} onClick={save} className="rounded-lg border border-[var(--border-control)] px-3 py-2 text-sm disabled:opacity-50">{pending ? 'Saving…' : 'Save state'}</button>
     </div>
     {message && <p role={failed ? 'alert' : 'status'} className="text-sm">{message}</p>}

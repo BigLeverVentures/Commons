@@ -13,6 +13,8 @@ APP_URL=https://board.example.org
 CLOUDFLARE_WORKER_NAME=my-community-board
 CLOUDFLARE_DOMAINS=board.example.org,www.board.example.org
 COMMONS_NOTIFICATIONS_ENABLED=false
+# Optional CPU cap; only set after enabling Workers Paid.
+COMMONS_WORKER_CPU_MS=1000
 ```
 
 Replace the examples. Align `COMMUNITY.canonicalOrigin` and Supabase Site URL with `APP_URL`. `cloudflare.config.ts` declares bindings and a `*/5 * * * *` trigger. `src/worker.ts` contains fetch and scheduled handlers. Do not copy another operator's domains or deploy placeholder domains.
@@ -52,3 +54,9 @@ Provision `SUPABASE_SERVICE_ROLE_KEY` and `CRON_SECRET` as Worker secrets, with 
 6. Confirm logs, backups, support contact, and policy describe this deployment.
 
 The Worker scheduler calls its own authenticated endpoints using `APP_URL` and `CRON_SECRET`. Cleanup remains active when notifications are disabled. An unreachable origin, missing secret, or failed service-role connection makes scheduled dispatch ineffective. Do not add duplicate external schedules without deliberately replacing the bundled trigger. Confirm compatibility before switching between Node and vinext builds.
+
+## CPU limits and diagnostics
+
+Server rendering can exceed Workers Free's 10 ms CPU allowance even at low traffic, producing error 1102. Use Workers Paid for adequate headroom; the example above sets an explicit 1000 ms CPU budget. Leave `COMMONS_WORKER_CPU_MS` empty to retain your account default. Valid explicit values are whole milliseconds from 1 through 300000, subject to your plan. The setting does not subscribe you to a plan or change billing by itself. See [Cloudflare limits](https://developers.cloudflare.com/workers/platform/limits/) and [pricing](https://developers.cloudflare.com/workers/platform/pricing/).
+
+Invocation logs are enabled with full sampling, query-string redaction and traces disabled. After deploying, confirm the live CPU limit and redaction settings, check CPU/error metrics, and review sampling/retention as traffic grows. Avoid adding console output containing tokens, headers, emails or request bodies. Older incidents cannot be reconstructed if logs were disabled at the time.

@@ -47,7 +47,7 @@ export default async function Page() {
       </section>
       <section>
         <h2>Why am I signed in in one browser but not another?</h2>
-        <p>Each browser keeps its own sign-in. Open the sign-in email link in the same browser you use for {COMMUNITY.name}.</p>
+        <p>Enter your registered email on Sign in, open the newest email, then press Sign in on the page that opens. Each browser keeps its own sign-in; open the link in the browser you want to use.</p>
       </section>
       <section>
         <h2>Still unclear, or missing a feature?</h2>

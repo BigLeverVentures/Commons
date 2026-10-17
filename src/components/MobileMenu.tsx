@@ -5,16 +5,19 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SignOutButton } from './SignOutButton'
 
-export function MobileMenu() {
+export function MobileMenu({ signedIn = true }: { signedIn?: boolean }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
-  const links = [
+  const links = signedIn ? [
     { href: '/board', label: 'Explore' },
     { href: '/posts/new', label: 'Start something' },
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/built', label: 'Built here' },
     { href: '/profile', label: 'Profile' },
+  ] : [
+    { href: '/board', label: 'Explore' },
+    { href: '/built', label: 'Built here' },
   ]
 
   return (
@@ -52,7 +55,7 @@ export function MobileMenu() {
                 {label}
               </Link>
             ))}
-            <SignOutButton />
+            {signedIn ? <SignOutButton /> : <Link href="/login" className="guest-menu-sign-in" onClick={() => setOpen(false)}>Sign in</Link>}
           </div>
         </div>
       )}
