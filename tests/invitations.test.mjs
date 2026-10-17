@@ -27,7 +27,7 @@ test('sharing eligibility is independent from paused, ended and expired contribu
  for(const status of ['closed','ended']) {const rows=api.invitationsFor([{...base,status}],now);assert.equal(rows.length,1);assert.equal(rows[0].kind,'share')}
  const expired=api.invitationsFor([{...base,participation:{...invitation,deadline:'2026-10-07'}}],now);assert.equal(expired.length,1);assert.equal(expired[0].kind,'share')
  assert.equal(api.invitationsFor([{...base,participation:{...invitation,deadline:'2026-10-08'}}],now).length,2)
- const legacy=api.invitationsFor([{...base,type:'offer',participation:null,sharing:null}],now);assert.equal(legacy[0].text,'A pilot');assert.equal(legacy[0].action,'Explore this offer')
+ const legacy=api.invitationsFor([{...base,type:'offer',participation:null,sharing:null}],now);assert.equal(legacy[0].text,'A pilot');assert.equal(legacy[0].action,'Explore offer')
 })
 test('digest preserves all invitations and orders edits and confirmations by activity',()=>{
  const posts=Array.from({length:9},(_,i)=>({...base,id:`post-${i}`,sharing:null,created_at:`2026-10-0${i+1}T00:00:00Z`}))

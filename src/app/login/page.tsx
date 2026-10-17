@@ -35,7 +35,7 @@ export default function LoginPage() {
           {COMMUNITY.name} community board
         </h1>
         <p className="text-center text-[var(--obsidian-muted)] mb-8">
-          Sign in with your registered email
+          Enter your registered email. We’ll email you a link to sign in—no password needed.
         </p>
         <Suspense>
           <LoginForm />

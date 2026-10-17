@@ -181,7 +181,7 @@ button.reaction-summary:hover { text-decoration:underline; }
 
 /* A compact, scannable Commons feed rather than a grid of invitation cards. */
 .invitation-grid {display:flex;flex-direction:column;gap:8px;}
-.invitation-row {display:grid;grid-template-columns:76px minmax(150px,190px) minmax(0,1fr) minmax(100px,140px) auto;align-items:center;gap:18px;padding:16px 20px;border-radius:12px;min-height:76px;}
+.invitation-row {display:grid;grid-template-columns:76px minmax(150px,190px) minmax(0,1fr) max-content auto;align-items:center;gap:18px;padding:16px 20px;border-radius:12px;min-height:76px;}
 .invitation-type {white-space:nowrap;overflow-wrap:normal;word-break:normal;font-size:var(--type-caption);font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
 .invitation-identity {min-width:0;}
 .invitation-identity > div {min-width:0;}
@@ -193,8 +193,8 @@ button.reaction-summary:hover { text-decoration:underline; }
 .invitation-date {font-size:var(--type-caption);color:var(--obsidian-muted);white-space:nowrap;}
 .invitation-date > span {display:block;margin-top:3px;}
 .invitation-preview {grid-template-columns:55px minmax(100px,140px) minmax(0,1fr) minmax(80px,110px);}
-@media(max-width:1050px){.invitation-row{grid-template-columns:60px minmax(120px,155px) minmax(0,1fr) 115px;gap:12px}.invitation-date{grid-column:3/5}}
-@media(max-width:640px){.invitation-row,.invitation-preview{grid-template-columns:max-content minmax(0,1fr);gap:12px 14px;padding:16px}.invitation-identity{grid-column:2;align-items:flex-start}.invitation-author{white-space:normal;overflow-wrap:anywhere}.invitation-kind{display:block}.invitation-story{grid-column:1/-1}.invitation-text{white-space:normal;overflow-wrap:anywhere;text-wrap:pretty}.invitation-action{grid-column:1/-1}.invitation-date{grid-column:1/-1;white-space:normal}.invitation-date > span{display:inline;margin:0}.invitation-kind{font-size:var(--type-caption)}}
+@media(max-width:1050px){.invitation-row{grid-template-columns:60px minmax(120px,155px) minmax(0,1fr) max-content;gap:12px}.invitation-date{grid-column:3/5}}
+@media(max-width:640px){.invitation-row,.invitation-preview{grid-template-columns:max-content minmax(0,1fr);gap:12px 14px;padding:16px}.invitation-identity{grid-column:2;align-items:flex-start}.invitation-author{white-space:normal;overflow-wrap:anywhere}.invitation-story{grid-column:1/-1}.invitation-text{white-space:normal;overflow-wrap:anywhere;text-wrap:pretty}.invitation-action{grid-column:1/-1}.invitation-date{grid-column:1/-1;white-space:normal}.invitation-date > span{display:inline;margin:0}}
 
 /* Give the compact social actions a visible home without oversized panels. */
 .reaction-toolbar {border:1px solid var(--border);border-radius:12px;background:var(--surface-soft);padding:8px 10px;}
@@ -356,3 +356,50 @@ label:has(> input[type=checkbox]),label:has(> input[type=radio]) {min-height:44p
 .faq-content h1 {margin-bottom:24px;}
 .faq-content h2 {font:var(--type-card)/1.3 var(--font-display);margin:28px 0 8px;}
 .faq-content p {overflow-wrap:anywhere;}
+
+/* Topic choices share the post-type typography, with comfortable tap targets. */
+.board-controls { position:relative; }
+.topic-filter { position:relative; flex:0 1 220px; min-width:0; }
+.select-menu-trigger { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; border:1px solid var(--border-control); background:var(--surface); color:var(--ink); border-radius:24px; padding:10px 15px; font-size:var(--type-caption); cursor:pointer; }
+.select-menu-trigger svg,.select-menu-options svg { width:20px; height:20px; flex:none; }
+.select-menu-options { position:absolute; top:calc(100% + 8px); right:0; width:320px; max-width:calc(100vw - 32px); max-height:min(400px,60dvh); overflow-y:auto; overscroll-behavior:contain; z-index:30; padding:6px; border:1px solid var(--border-control); border-radius:16px; background:var(--surface); box-shadow:0 8px 24px #0003; }
+.select-menu-options button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px 12px; min-height:44px; border-radius:10px; font-size:var(--type-caption); line-height:1.4; color:var(--ink); cursor:pointer; }
+.select-menu-options button[aria-selected=true],.select-menu-options button:hover { background:var(--surface-soft); }
+.select-menu-options button:focus-visible { outline:2px solid var(--action); outline-offset:-2px; }
+@media(max-width:700px) { .topic-filter { position:static; flex:1; } .select-menu-filter .select-menu-options { left:0; right:0; width:100%; max-width:100%; } }
+
+/* Form menus match surrounding fields while retaining comfortable touch targets. */
+.select-menu-form { position:relative; min-width:0; flex:1; }
+.select-menu-form .select-menu-trigger { border-radius:8px; padding:10px 12px; font-size:var(--type-support); min-height:44px; text-align:left; }
+.select-menu-form .select-menu-options { left:0; right:0; width:100%; max-width:100%; }
+.select-menu-form .select-menu-options button { font-size:var(--type-support); }
+.select-menu-trigger span,.select-menu-options span { min-width:0; overflow-wrap:anywhere; }
+.select-menu-trigger:disabled { opacity:.5; cursor:default; }
+.select-menu-trigger:focus-visible { outline:2px solid var(--action); outline-offset:2px; }
+
+/* PDFs are an inviting glimpse, rather than a miniature full-page reader. */
+.attachment-preview-pdf,.post-story-visual .attachment-preview-pdf { display:block; aspect-ratio:8 / 5; min-height:0; max-height:none; background:#fff; }
+.attachment-preview-pdf canvas,.post-story-visual .attachment-preview-pdf canvas { display:block; width:100%; height:auto; max-width:none; max-height:none; }
+.attachment-pdf-badge { position:absolute; right:12px; top:12px; z-index:1; display:inline-flex; align-items:center; gap:5px; padding:5px 8px; border:1px solid var(--border-control); border-radius:8px; background:var(--surface); color:var(--ink); font-size:var(--type-caption); line-height:1.2; }
+.attachment-pdf-badge svg { width:16px; height:16px; }
+
+/* Intro headings are bounded teasers; full invitation text remains on the post. */
+.invitation-headline-phone { display:none; }
+.invitation-headline-wide { display:inline; }
+.invitation-mobile-title { display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; overflow-wrap:normal; }
+.invitation-headline-preview { padding:12px; border:1px dashed var(--border-control); border-radius:12px; }
+.invitation-headline-preview > p + p { margin-top:10px; }
+@media(max-width:640px) {
+  .invitation-headline-phone { display:inline; }
+  .invitation-headline-wide { display:none; }
+}
+
+/* Website previews fill a 2:1 window, anchored at the top and never taller than 600px. */
+.website-preview-image,.website-preview-card .website-preview-image,.post-story-visual .website-preview-image { display:block; position:relative; width:100%; aspect-ratio:2 / 1; min-height:0; max-height:600px; background:#fff; }
+.website-preview-image img,.website-preview-card .website-preview-image img,.post-story-visual .website-preview-image img { position:absolute; inset:0; display:block; width:100%; height:100%; max-height:none; object-fit:cover; object-position:center top; }
+
+/* Keep each invitation action and its arrow together at every width. */
+.invitation-action { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.invitation-action svg { flex-shrink:0; }
+
+.guest-menu-sign-in { border-top:1px solid var(--border-control); padding-top:12px; }

@@ -41,6 +41,11 @@ export async function fetchWebsitePreview(link: string, fetcher: typeof fetch = 
   const endpoint = new URL('https://api.microlink.io')
   endpoint.searchParams.set('url', link)
   endpoint.searchParams.set('screenshot', 'true')
+  // One deterministic fallback composition for every website, with no per-site crop.
+  endpoint.searchParams.set('screenshot.fullPage', 'false')
+  endpoint.searchParams.set('viewport.width', '720')
+  endpoint.searchParams.set('viewport.height', '360')
+  endpoint.searchParams.set('viewport.deviceScaleFactor', '2')
   try {
     const response = await fetcher(endpoint, { signal: AbortSignal.timeout(35000), redirect: 'manual', cache: 'no-store', credentials: 'omit' })
     if (!response.ok) { onFailure?.(`The preview service returned HTTP ${response.status}.`); return null }

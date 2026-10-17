@@ -1,6 +1,7 @@
 import { COMMUNITY } from '@/config/community'
 import Link from 'next/link'
 import { Nav } from './Nav'
+import { MobileMenu } from './MobileMenu'
 import { ProfileBanner } from './ProfileBanner'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import { isPreviewMode } from '@/lib/runtime'
@@ -9,8 +10,10 @@ import { previewFellow } from '@/lib/preview'
 export async function CommonsShell({ children, user, fullWidth = false }: { children: React.ReactNode; user: { id: string } | null; fullWidth?: boolean }) {
   const fellow = user ? (isPreviewMode() ? await previewFellow() : (await (await getSupabaseServerClient()).from('fellows').select('name, avatar_path, avatar_style').eq('id', user.id).single()).data) : null
   return <div>
-    {user ? <Nav fellow={fellow} /> : <nav className="commons-nav border-b border-[var(--border)]"><div className="commons-nav-inner page-inset flex flex-wrap items-center justify-between">
+    {user ? <Nav fellow={fellow} /> : <nav className="commons-nav relative z-10 border-b border-[var(--border)]"><div className="commons-nav-inner page-inset flex flex-wrap items-center justify-between">
       <Link href="/board" className="wordmark">{COMMUNITY.wordmark}</Link>
+      <div className="hidden lg:flex items-center gap-3 text-sm"><Link href="/board">Explore</Link><Link href="/built">Built here</Link><Link href="/login">Sign in</Link></div>
+      <MobileMenu signedIn={false} />
     </div></nav>}
     {isPreviewMode() && <div className="preview-strip">Local preview · fictional members and projects · changes stay on this computer</div>}
     {user && !fellow?.name && <ProfileBanner />}

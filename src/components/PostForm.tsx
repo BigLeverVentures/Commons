@@ -1,4 +1,6 @@
 'use client'
+
+import { SelectMenu } from './SelectMenu'
 import { LinkIcon } from '@/components/LinkIcon'
 import { ReactButtonIcon } from '@/components/ReactionIcon'
 import { FellowAvatar } from '@/components/FellowAvatar'
@@ -219,7 +221,7 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
         <MentionTextarea name="description" value={description} onChange={setDescription} initialMentions={fields ? draftJson(fields.description_mentions) : post?.description_mentions} limit={built?1000:2000} placeholder={built?'Tell the story and the community connection behind it…':'Add details so members know how to help or connect…'} />
       </div>
 
-      {built && !post && <div className="space-y-2"><label htmlFor="collaboration_status" className="block text-sm font-medium">Where is the project now?</label><select id="collaboration_status" name="collaboration_status" value={collaborationStatus} onChange={event => setCollaborationStatus(event.target.value)} className="w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-3 text-sm">{PROJECT_STATES.map(state => <option key={state.value} value={state.value}>{state.label}</option>)}</select><p className="text-xs text-[var(--obsidian-muted)]">Welcoming projects appear on both the active board and Built here. Every state keeps the story in Built here.</p></div>}
+      {built && !post && <div className="space-y-2"><label htmlFor="collaboration_status" className="block text-sm font-medium">Where is the project now?</label><SelectMenu id="collaboration_status" name="collaboration_status" label="Project state" value={collaborationStatus} onChange={setCollaborationStatus} options={PROJECT_STATES} /><p className="text-xs text-[var(--obsidian-muted)]">Welcoming projects appear on both the active board and Built here. Every state keeps the story in Built here.</p></div>}
 
       <WebsitePreviewField label="Website or link (optional)" link={fields?.website_url_draft ?? fields?.outcome_url ?? post?.outcome_url ?? ''} preview={fields ? draftJson(fields.link_preview) : post?.link_preview} onPendingChange={setPreviewPending} onLinkChange={setWebsite} />
       {built && <p className="text-xs text-[var(--obsidian-muted)]">An earlier board post is not required. Celebrate something members built together.</p>}
@@ -235,11 +237,11 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
 
       <div className="rounded-xl border border-[var(--border-control)] p-4 space-y-2">
         <label htmlFor="share_target" className="block text-sm font-medium">What should members share?</label>
-        <select id="share_target" name="share_target" value={chosenTarget} onChange={event=>setShareTarget(event.target.value)} className="w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-3 text-sm">
-          {website.trim()&&<option value="website">Website — {website}</option>}
-          {hasFile&&<option value="attachment">Attachment — {attachmentName||existingAttachment?.name}</option>}
-          <option value="post">This public board post</option>
-        </select>
+        <SelectMenu id="share_target" name="share_target" label="Sharing destination" value={chosenTarget} onChange={setShareTarget} options={[
+          ...(website.trim() ? [{ value: 'website', label: `Website — ${website}` }] : []),
+          ...(hasFile ? [{ value: 'attachment', label: `Attachment — ${attachmentName || existingAttachment?.name}` }] : []),
+          { value: 'post', label: 'This public board post' },
+        ]} />
         <p className="text-xs text-[var(--obsidian-muted)]">This destination supplies the featured preview and the Share link. Your board post is public; members sign in to participate. Removing the selected attachment switches sharing to this post.</p>
       </div>
       <InvitationFields initialDraft={fields} participation={post?.participation} sharing={post?.sharing} author={author} postType={post?.type ?? (kind === 'built' ? 'project' : kind)} />
@@ -262,10 +264,7 @@ function PostEditor({ post, initialBuilt = false, author = {name:null}, draft, s
 
       <div>
         <label htmlFor="topic" className="block text-sm font-medium mb-1">Topic island</label>
-        <select name="topic" id="topic" value={topic} onChange={event => setTopic(event.target.value)} className="w-full rounded-lg border border-[var(--border-control)] bg-[var(--surface)] px-3 py-3 text-sm">
-          <option value="">Suggest from my tags</option>
-          {TOPICS.map(t => <option value={t.id} key={t.id}>{t.name}</option>)}
-        </select>
+        <SelectMenu id="topic" name="topic" label="Topic island" value={topic} onChange={setTopic} options={[{ value: '', label: 'Suggest from my tags' }, ...TOPICS.map(topic => ({ value: topic.id, label: topic.name }))]} />
       </div>
       <p className="rounded-xl border border-[var(--border-control)] p-4 text-sm text-[var(--obsidian-muted)]">All asks, offers, and projects are public, including your name and Built here story. Introductions are private to you and the post author; emails are never public.</p>
 

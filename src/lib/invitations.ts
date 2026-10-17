@@ -6,7 +6,7 @@ export type Participation = { text: string; kind: typeof INVITATION_KINDS[number
 export type Sharing = { text: string; audience: string | null; message: string | null }
 export type InvitationPost = {id:string;type:string;title:string;status:string;created_at:string;updated_at?:string|null;user_id?:string;topic?:string|null;tags:string[];participation?:Participation|null;sharing?:Sharing|null;participation_published_at?:string|null;sharing_published_at?:string|null;confirmed_at?:string|null;fellow:{name:string|null;avatar_path?:string|null;avatar_style?:string|null}|null}
 export type Invitation = {postType?:string;id:string;postId:string;authorKey:string;author:string;avatarPath?:string|null;avatarStyle?:string|null;text:string;action:string;kind:'request'|'offer'|'share';topic:string;publishedAt:string;updatedAt?:string|null;confirmedAt:string|null;commitment:string|null;deadline:string|null}
-const labels: Record<Participation['kind'],string> = {feedback:'Offer feedback',introduction:'Make an introduction',testing:'Take a look',mentoring:'Connect',collaboration:'Explore the project',offer:'Explore this offer',other:'Take a look'}
+const labels: Record<Participation['kind'],string> = {feedback:'Offer feedback',introduction:'Make an introduction',testing:'Take a look',mentoring:'Connect',collaboration:'Explore project',offer:'Explore offer',other:'Take a look'}
 export function invitationFields(form: FormData): {participation:Participation|null;sharing:Sharing|null} | {error:string} {
   const text = (key:string) => {const value=form.get(key);return typeof value === 'string' ? value.trim() : ''}
   let participation:Participation|null=null,sharing:Sharing|null=null
@@ -34,7 +34,7 @@ export function invitationsFor(posts:InvitationPost[], now=Date.now()): Invitati
     const contribution=post.participation
     if(post.status==='open' && (!contribution?.deadline || Date.parse(`${contribution.deadline}T23:59:59.999Z`)>=now)) {
       if(contribution) result.push({...base,id:`${post.id}:participation`,text:contribution.text,action:labels[contribution.kind] ?? 'Take a look',kind:post.type==='offer'?'offer':'request',publishedAt:post.participation_published_at || post.created_at,commitment:contribution.commitment,deadline:contribution.deadline})
-      else if(['ask','offer'].includes(post.type)) result.push({...base,id:`${post.id}:legacy`,text:post.title,action:post.type==='offer'?'Explore this offer':'Offer help',kind:post.type==='offer'?'offer':'request',publishedAt:post.created_at,commitment:null,deadline:null})
+      else if(['ask','offer'].includes(post.type)) result.push({...base,id:`${post.id}:legacy`,text:post.title,action:post.type==='offer'?'Explore offer':'Offer help',kind:post.type==='offer'?'offer':'request',publishedAt:post.created_at,commitment:null,deadline:null})
     }
     if(post.sharing) result.push({...base,id:`${post.id}:sharing`,text:post.sharing.text,action:'Help share',kind:'share',publishedAt:post.sharing_published_at || post.created_at,commitment:null,deadline:null})
     return result
